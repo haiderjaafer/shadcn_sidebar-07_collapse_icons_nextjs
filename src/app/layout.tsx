@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
+import { ThemeProvider } from "@/components/theme-provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -23,18 +24,29 @@ export const metadata: Metadata = {
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
 
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
       
+      <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
 
     <SidebarProvider>
       <AppSidebar />
-      <SidebarTrigger />
-      <main className="flex m-auto justify-center">
+      
+      
        
-        {children}
-      </main>
+    
+            <main className="flex m-auto justify-center">
+            {children}
+            </main>
+          
+     
     </SidebarProvider>
+    </ThemeProvider>
     </body>
     </html>
   )

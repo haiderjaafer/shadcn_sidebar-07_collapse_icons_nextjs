@@ -2,16 +2,20 @@
 
 import * as React from "react"
 import {
-  AudioWaveform,
+  
   BookOpen,
   Bot,
-  Command,
+  
   Frame,
-  GalleryVerticalEnd,
+ 
+  Building,
   Map,
   PieChart,
   Settings2,
   SquareTerminal,
+ 
+  CircleUserRound,
+  Code,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -24,7 +28,10 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { ModeToggle } from "./Mode-Toggle"
+
 
 // This is sample data.
 const data = {
@@ -35,18 +42,18 @@ const data = {
   },
   teams: [
     {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
+      name: "شركة مصافي الوسط",
+      logo: Building,
+      plan: "ITC",
     },
     {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
+      name: "قسم تقنية المعلومات",
+      logo: CircleUserRound ,
       plan: "Startup",
     },
     {
-      name: "Evil Corp.",
-      logo: Command,
+      name: "شعبة ادارة الشبكات والبرمجة",
+      logo: Code ,
       plan: "Free",
     },
   ],
@@ -157,22 +164,44 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
+  const [isCollapsed, setIsCollapsed] = React.useState(false);
+
+   // Toggle the collapsed state
+   const handleSidebarToggle = () => {
+    setIsCollapsed(!isCollapsed);
+  };
+
+  const handleSidebar = () => {
+    setIsCollapsed(!isCollapsed);
+  };
+
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar onClick={handleSidebar} collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
+      
+      {/* Dynamic className based on the collapsed state */}
+      <div className={`flex ${isCollapsed ? 'flex-col' : 'justify-end'} mr-1`}>
+        <div className="m-auto">
+          <ModeToggle  />
+        </div>
+        <SidebarTrigger className={`flex ${isCollapsed ? 'm-auto' : 'mr-2'} `}  onClick={handleSidebarToggle} />
+      </div>
+      
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects  projects={data.projects} />
+        <NavProjects projects={data.projects} />
       </SidebarContent>
 
       <SidebarFooter>
         <NavUser user={data.user} />
       </SidebarFooter>
+      
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }
 
 //npx shadcn@latest add sidebar-07
