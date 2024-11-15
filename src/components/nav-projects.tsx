@@ -55,7 +55,9 @@ export function NavProjects({
                   <MoreHorizontal />
                   <span className="sr-only">More</span>
                 </SidebarMenuAction>
+                
               </DropdownMenuTrigger>
+              
               <DropdownMenuContent
                 className="w-48 rounded-lg"
                 side={isMobile ? "bottom" : "right"}
@@ -84,7 +86,9 @@ export function NavProjects({
             <span>More</span>
           </SidebarMenuButton>
         </SidebarMenuItem>
+        
       </SidebarMenu>
+      
     </SidebarGroup>
   )
 }

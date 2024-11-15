@@ -166,6 +166,7 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const [isCollapsed, setIsCollapsed] = React.useState(false);
+  
 
    // Toggle the collapsed state
    const handleSidebarToggle = () => {
@@ -180,15 +181,31 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar onClick={handleSidebar} collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
+        
+        
       </SidebarHeader>
+
+
+        {/* Display the isCollapsed state */}
+        {/* <div className="p-2 text-sm text-gray-600">
+          isCollapsed: {isCollapsed ? 'true' : 'false'}
+        </div> */}
       
-      {/* Dynamic className based on the collapsed state */}
-      <div className={`flex ${isCollapsed ? 'flex-col' : 'justify-end'} mr-1`}>
-        <div className="m-auto">
-          <ModeToggle  />
-        </div>
-        <SidebarTrigger className={`flex ${isCollapsed ? 'm-auto' : 'mr-2'} `}  onClick={handleSidebarToggle} />
+       {/* Ensure the className and layout are managed correctly */} 
+       
+
+       {/* <div className={`  ${isCollapsed ? "flex  items-center flex-col-reverse   " : "flex items-center justify-between m-2   " }`} > */}
+        {/* <div className="m-auto">
+          <ModeToggle />
+        </div> */}
+      <div className="flex justify-end mr-2">
+      <SidebarTrigger
+           
+          className=""
+          onClick={handleSidebarToggle}
+        />
       </div>
+      {/* </div> */}
       
       <SidebarContent>
         <NavMain items={data.navMain} />
