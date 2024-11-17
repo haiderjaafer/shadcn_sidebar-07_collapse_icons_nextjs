@@ -6,6 +6,7 @@ type User ={
     name:string;
     email:string;
     password:string;
+    company : string;
 
 }
 
@@ -21,15 +22,15 @@ export const UserContextProvider = ({children}:PropsWithChildren) => {
 
 const [data , setData] = useState<User | undefined>(undefined);
 
-
+     console.log("data" + data?.company);
 
     
   return (
-    <UserContext.Provider  value={{user:data ,setUser:setData}}>{children}</UserContext.Provider>
+    <UserContext.Provider  value={{user:data , setUser:setData}}>{children}</UserContext.Provider>
   )
 };
 
-export const useUser=()=>{
+export const useUser=()=>{                              // custom hook
 
 
     const context = useContext(UserContext);

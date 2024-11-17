@@ -10,12 +10,13 @@ export const FormUser = () => {
     const [name , setName] = useState<string>("");
     const [email , setEmail] = useState<string>("");
     const [password , setPassword] = useState<string>("");
+    const [company , setCompany] = useState<string>("");
 
     const onSubmit = (e:React.FormEvent<HTMLFormElement>)=>{
 
         e.preventDefault();
 
-        setUser({name,email,password});
+        setUser({name,email,password,company});
 
     }
 
@@ -47,6 +48,14 @@ export const FormUser = () => {
     type="text"
     placeholder="Password"
     onChange={(e)=>setPassword(e.target.value)}
+    
+    />
+
+<input
+    className="p-2 border rounded"
+    type="text"
+    placeholder="Company"
+    onChange={(e)=>setCompany(e.target.value)}
     
     />
 
