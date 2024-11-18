@@ -4,6 +4,7 @@ import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
 import { ThemeProvider } from "@/components/theme-provider";
+import Providers from "@/providers/Providers";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,7 +27,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
     <html lang="en" suppressHydrationWarning>
       <body>
-      
+      <Providers>
       <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -41,12 +42,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
        
     
             <main className="flex m-auto justify-center">
-            {children}
+           
+          <div className="">{children}</div>
+        
             </main>
           
      
     </SidebarProvider>
     </ThemeProvider>
+    </Providers>
     </body>
     </html>
   )

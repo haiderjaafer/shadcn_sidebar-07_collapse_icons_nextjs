@@ -64,6 +64,12 @@ const data = {
       icon: SquareTerminal,
       isActive: true,
       items: [
+
+        {
+          title: "الصفحة الرئيسية",
+          url: "/",
+        },
+
         {
           title: "الاضافة",
           url: "/add",
@@ -73,8 +79,8 @@ const data = {
           url: "#",
         },
         {
-          title: "تعديل كتاب",
-          url: "#",
+          title: "تقارير",
+          url: "api/reports",
         },
       ],
     },

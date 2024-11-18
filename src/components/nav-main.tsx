@@ -1,5 +1,12 @@
 "use client"
 
+const reportUrls = [
+  "api/reports",
+  "api/reports/sales",
+  "api/reports/summary",
+  // Add more report URLs here
+];
+
 import { ChevronRight, type LucideIcon } from "lucide-react"
 
 import {
@@ -17,6 +24,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
+import Link from "next/link"
 
 
 export function NavMain({
@@ -57,9 +65,15 @@ export function NavMain({
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
-                        <a href={subItem.url}>
+                        {/* <Link target={subItem.url === "api/reports" ? "_blank" : "_self"} href={subItem.url}>
                           <span className="font-bold ">{subItem.title}</span>
-                        </a>
+                        </Link> */}
+                                 <Link
+                              href={subItem.url}
+                              target={reportUrls.includes(subItem.url) ? "_blank" : "_self"}
+                                  >
+                           <span className="font-bold">{subItem.title}</span>
+                               </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}
