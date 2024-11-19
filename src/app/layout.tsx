@@ -5,6 +5,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
 import { ThemeProvider } from "@/components/theme-provider";
 import Providers from "@/providers/Providers";
+import { Toaster } from "@/components/ui/toaster"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -43,7 +44,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     
             <main className="flex m-auto justify-center">
            
-          <div className="">{children}</div>
+          <div className="">
+            {children}
+            <Toaster  />
+
+          </div>
         
             </main>
           

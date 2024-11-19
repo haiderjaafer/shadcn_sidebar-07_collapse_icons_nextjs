@@ -1,11 +1,13 @@
+import FormAddition from '@/components/form-addition/FormAddition'
+import ComboBoxComponent from '@/components/form-components/Combobox'
 import React from 'react'
 
-const Add = () => {
+const AddFormPage = () => {
   return (
-    <div >
-      <h1>add page is here</h1>
+    <div>
+      <FormAddition/>
     </div>
   )
 }
 
-export default Add
+export default AddFormPage
