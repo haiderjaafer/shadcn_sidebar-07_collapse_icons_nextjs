@@ -16,7 +16,8 @@ interface Props{
 export async function GET(req: NextRequest, res: NextResponse) {
   
   try {
-    const url = "http://localhost:8080/jasperserver/rest_v2/reports/reports/orderReport/orderReportSample.pdf";
+    const url = "http://localhost:8080/jasperserver/rest_v2/reports/reports/orderReport/orderReportSample.pdf"; // this worked on report server
+   // const url = "http://localhost:8080/jasperserver/rest_v2/reports/reports/orderReport/cvReport.pdf";   // this should published on report server
 
         const params = {
         orderID : "123",
