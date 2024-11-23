@@ -1,0 +1,27 @@
+BEGIN TRY
+
+BEGIN TRAN;
+
+-- CreateTable
+CREATE TABLE [dbo].[department] (
+    [de] INT NOT NULL IDENTITY(1,1),
+    [com] VARCHAR(100) NOT NULL,
+    [co] INT NOT NULL,
+    CONSTRAINT [department_pkey] PRIMARY KEY CLUSTERED ([de])
+);
+
+-- AddForeignKey
+ALTER TABLE [dbo].[department] ADD CONSTRAINT [department_co_fkey] FOREIGN KEY ([co]) REFERENCES [dbo].[com]([co]) ON DELETE CASCADE ON UPDATE CASCADE;
+
+COMMIT TRAN;
+
+END TRY
+BEGIN CATCH
+
+IF @@TRANCOUNT > 0
+BEGIN
+    ROLLBACK TRAN;
+END;
+THROW
+
+END CATCH

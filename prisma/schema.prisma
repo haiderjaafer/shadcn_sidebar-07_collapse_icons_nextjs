@@ -1,0 +1,74 @@
+//npm install prisma --save-dev
+
+// npm install @prisma/client
+
+//npx prisma init 
+
+// npx prisma migrate dev    // on every change in prisma schema 
+
+//npx prisma db push
+
+//npx prisma studio
+
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model com {
+
+  co        Int       @id @default(autoincrement())
+  com       String    @db.VarChar(100)
+  departments department[]
+  units      unit[]
+  users      Users[]
+}
+
+model department {
+
+  de        Int       @id @default(autoincrement())
+  com       String    @db.VarChar(100)
+  co         Int
+  committee com @relation(fields: [co], references: [co], onDelete: Cascade) 
+  units     unit[] 
+  users     Users[] 
+    
+}
+
+
+model unit {
+
+  un        Int       @id @default(autoincrement())
+  unit      String    @db.VarChar(100)
+      
+  co         Int
+  de         Int
+  committee com @relation(fields: [co], references: [co], onDelete: NoAction,onUpdate: NoAction)  
+  departmentName department @relation(fields: [de], references: [de], onDelete: Cascade,onUpdate: NoAction) 
+  user       Users[]    
+}
+
+model Users {
+  id             Int      @id @default(autoincrement())
+  userName       String   @db.VarChar(100) 
+
+  comcommittee   Int
+  userCommittee  com      @relation(fields: [comcommittee], references: [co], onDelete: NoAction, onUpdate: NoAction)
+
+  department     Int
+  userDepartment department @relation(fields: [department], references: [de], onDelete: NoAction, onUpdate: NoAction)
+
+  unit           Int
+  userUnit       unit     @relation(fields: [unit], references: [un], onDelete: NoAction, onUpdate: NoAction)
+}
+
+
+
+
+

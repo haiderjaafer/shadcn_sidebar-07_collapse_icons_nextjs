@@ -1,5 +1,5 @@
 import FormAddition from '@/components/form-addition/FormAddition'
-import ComboBoxComponent from '@/components/form-components/Combobox'
+import ComboBoxComponent from '@/components/form-components/ComboBoxComponentCommittees'
 import React from 'react'
 
 const AddFormPage = () => {

@@ -2,7 +2,7 @@
 
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
  
 import { useToast,toast } from "@/hooks/use-toast"
@@ -17,8 +17,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import React from 'react'
-import ComboBoxComponent from '../form-components/Combobox'
+import React, { useState } from 'react'
+import ComboBoxComponentCommittees from '../form-components/ComboBoxComponentCommittees'
 import { Label } from "@/components/ui/label"
 import {
     Card,
@@ -31,6 +31,14 @@ import {
 import { ToastAction } from "@radix-ui/react-toast"
 import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
+import ComboBoxComponentDepartment from "../form-components/DepartmentCombobox"
+import ComboBoxComponentUnits from "../form-components/ComboBoxComponentUnits"
+import { postUser } from '@/store/slices/userSlice'; // Import your thunk
+import { useSelector, useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store"
+import { TestSelector } from "../Test_Selector"
+import { UserPayload } from "@/utiles/types/UserPayload"
+
 
 
 
@@ -38,39 +46,160 @@ const formSchema = z.object({
     username: z.string().min(2, {
       message: "يجب ادخال الاسم",
     }),
+    department: z.string().optional(), // Make department optional
+    image: z
+    .instanceof(File)
+    .refine((file) => file?.type === "application/pdf", {
+      message: "يجب تحميل ملف PDF فقط",
+    })
+    .optional(), // Optional PDF file validation
+
   })
 
+  export interface paylaodType{
+    userName:string ;
+    comcommittee:number;
+    department:number;
+    unit:number;
+}
+
 const FormAddition = () => {
+
+  const dispatch = useDispatch<AppDispatch>();
+
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
           username: "",
+          department:""
         },
       })
 
+        // State to hold the file name
+  const [fileName, setFileName] = useState<string | null>(null);
 
-      function onSubmit(values: z.infer<typeof formSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values)
 
-        toast({
+  const [selectedCommittee, setSelectedCommittee] = useState<string | undefined>(undefined);
+  const [selectedDepartment, setSelectedDepartment] = useState<string | undefined>(undefined);
+  const [selectedUnit, setSelectedUnit] = useState<string | undefined>();
+
+
+
+
+
+
+
+    // Form submission handler
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+
+    console.log(values);
+
+    if (!selectedCommittee || !selectedDepartment || !selectedUnit) {
+      //console.error('All selections are required');
+       toast({
             className: cn(
                 'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
               ),
-            title: "You submitted the following values:",
+            title: "الهيكلية فارغة",
             description: (
               <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                <code className="text-white">{JSON.stringify(values.username, null, 2)}</code>
+                <code className="text-white">يجب اختيار كامل الهيكلية</code>
+                
               </pre>
             ),
 
-            // action: (
-            //     <ToastAction altText="Goto schedule to undo">Undo</ToastAction>
-            //   ),
+          
           })
-      }
+      return;
+    }
+
+    // Construct the payload
+    const payload :UserPayload = {
+      userName: values.username,
+      comcommittee: parseInt(selectedCommittee,10),
+      department: parseInt(selectedDepartment, 10),
+      unit: parseInt(selectedUnit, 10),
+    };
+
+    console.log("payload",payload);
+
+    // Dispatch the async thunk
+    dispatch(postUser(payload))
+      .unwrap() // Optional: to handle resolved/rejected cases directly
+      .then((response) => {
+        //console.log('User created successfully:', response);
+        toast({
+          className: cn(
+              'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
+            ),
+          title: "اضافة بيانات",
+          description: (
+            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+              <code className="text-white">تم اضافة البيانات بنجاح</code>
+              
+            </pre>
+          ),
+
+        
+        })
+      })
+      .catch((error) => {
+       // console.error('Error creating user:', error);
+       toast({
+        className: cn(
+            'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
+          ),
+        title: "خطأ",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">حدث خطأ اثناء عملية الاضافة</code>
+            
+          </pre>
+        ),
+
+      
+      })
+      });
+
+
+//       // Access the file from values.image
+//    const file = values.image;
+//    if (file) {
+//      console.log("Selected file:", file);
+//      console.log("File name:", file.name);
+//      console.log("File size:", file.size);
+//      console.log("File type:", file.type);
+//    } else {
+//      console.log("No file selected");
+//    }
+
+
+
+//  toast({
+//             className: cn(
+//                 'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
+//               ),
+//             title: "You submitted the following values:",
+//             description: (
+//               <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+//                 <code className="text-white">{JSON.stringify(values.username, null, 2)}</code>
+//                 <code className="text-white">{JSON.stringify(file?.name, null, 2)}</code>
+//               </pre>
+//             ),
+
+          
+//           })
+
+
+
+
+
+
+
+  };
+
+
 
 
   return (
@@ -90,9 +219,52 @@ const FormAddition = () => {
 
         <div className="flex flex-col items-end my-3 ">
             
-      <Label className="  my-3 text-2xl font-extrabold text-blue-500 text-right" htmlFor="email"> القسم  </Label>
+      {/* <Label className="  my-3 text-2xl font-extrabold text-blue-500 text-right" htmlFor="email"> القسم  </Label>
 
-<ComboBoxComponent/>
+<ComboBoxComponent/> */}
+
+
+<div className="space-y-4">
+      {/* Committee ComboBox */}
+      <ComboBoxComponentCommittees
+        valueType={selectedCommittee}
+        onChange={(value) => {
+          setSelectedCommittee(value);
+          setSelectedDepartment(undefined); // Reset department selection
+        }}
+        fetchUrl="http://localhost:3000/api/architecture/committees"
+      />
+
+      {/* Department ComboBox */}
+      {selectedCommittee && (
+        <ComboBoxComponentDepartment
+          valueType={selectedDepartment}
+          onChange={setSelectedDepartment}
+          fetchUrl={`http://localhost:3000/api/architecture/committees/${selectedCommittee}`}
+        />
+      )}
+
+{selectedDepartment && (
+  <ComboBoxComponentUnits
+    valueType={selectedUnit}
+    onChange={setSelectedUnit}
+    fetchUrl={`http://localhost:3000/api/architecture/committees/${selectedCommittee}/${selectedDepartment}`}
+  />
+)}
+
+
+      <div>
+        <p>Selected Committee ID: {selectedCommittee}</p>
+        <p>Selected Department ID: {selectedDepartment}</p>
+        <p>Selected Unit ID: {selectedUnit}</p>
+      </div>
+    </div>
+
+
+    <TestSelector/>
+
+
+
         </div>
 
         <Separator className="my-4" />
@@ -119,7 +291,45 @@ const FormAddition = () => {
 
        
       <Label className="text-2xl text-blue-500 font-bold" htmlFor="picture">ملف</Label>
-      <Input id="image" type="file"  />
+      <Controller
+              name="image"
+              control={form.control}
+              render={({ field }) => (
+                <div className="flex  items-center justify-end  bg-slate-300 rounded-lg gap-4">
+                  {/* Display the file name below the file input...fileName put it here for display it in right*/}
+                     {fileName && (
+                    <div className="mt-2 text-sm text-gray-600">
+                <strong>{ fileName}</strong> 
+                      </div>
+                       )}
+
+                  {/* Hidden file input */}
+                  <input
+                    id="image"
+                    type="file"
+                    accept=".pdf"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] || null;
+                      field.onChange(file); // Set the selected file in the form state
+                      setFileName(file ? file.name : null); // Update the file name state
+                     
+
+                    }}
+                    className="hidden" // Hide the default file input
+                  />
+                  {/* Custom label styled as a button */}
+                  <label
+                    htmlFor="image"
+                    className="cursor-pointer px-4 py-2 bg-blue-500 text-white rounded-md"
+                  >
+                    اختر ملف
+                  </label>
+          
+                </div>
+              )}
+            />
+            
+         
     
 
     </CardContent>

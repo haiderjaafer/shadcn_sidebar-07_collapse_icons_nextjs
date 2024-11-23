@@ -1,11 +1,18 @@
 
 import {FormUser} from "@/components/context-component/FormUser";
 import UserCheck from "@/components/context-component/UserCheck";
+import { TestSelector } from "@/components/Test_Selector";
 import { UserContextProvider } from "@/context/UserContext";
+import { AppDispatch, RootState } from "@/store/store";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
+
+  
+
+
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
  {/* <h1>welcome to React nextjs</h1>
@@ -19,6 +26,9 @@ export default function Home() {
 <h1 className="text-center scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text-balance ">
         Complete Guide on how to Use Redux Toolkit in Next Js with Typescript
       </h1>
+
+      <TestSelector/>
+      
       <ul className="text-xl my-6 ml-6 list-decimal [&>li]:mt-2">
         <li>Installation and Setup </li>
         <li>
@@ -31,6 +41,10 @@ export default function Home() {
           <Link href="/form">Implement Multi step form with Redux</Link>
         </li>
       </ul>
+
+      
+
+
 
 
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
