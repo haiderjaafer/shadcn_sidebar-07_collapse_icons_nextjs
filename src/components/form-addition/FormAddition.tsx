@@ -38,6 +38,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store"
 import { TestSelector } from "../Test_Selector"
 import { UserPayload } from "@/utiles/types/UserPayload"
+import { format } from "date-fns"
+import { DatePicker } from "../ui/date-picker"
 
 
 
@@ -87,6 +89,17 @@ const FormAddition = () => {
 
 
 
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  
+  const handleDateChange = (date: Date) => {
+    console.log("Selected date:", date);
+    // You can set this date to state or use it as needed
+    const formattedDate = format(date, "yyyy/MM/dd ");
+
+    setSelectedDate(formattedDate)
+  };
+
+
 
 
 
@@ -95,31 +108,44 @@ const FormAddition = () => {
 
     console.log(values);
 
-    if (!selectedCommittee || !selectedDepartment || !selectedUnit) {
-      //console.error('All selections are required');
-       toast({
-            className: cn(
-                'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
-              ),
-            title: "الهيكلية فارغة",
-            description: (
-              <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                <code className="text-white">يجب اختيار كامل الهيكلية</code>
-                
-              </pre>
-            ),
+const missingFields: string[] = [];
 
-          
-          })
-      return;
-    }
+  // Check for missing fields
+  if (!selectedCommittee) missingFields.push('الهيأة');
+  if (!selectedDepartment) missingFields.push('القسم');
+  if (!selectedUnit) missingFields.push('الوحدة');
 
+  // Show dynamic toast if any field is missing
+  if (missingFields.length > 0) {
+    toast({
+      className: cn(
+        'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
+      ),
+      title: "الهيكلية فارغة",
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">
+            يجب اختيار: {missingFields.join(', ')}
+          </code>
+        </pre>
+      ),
+    });
+    return;
+  }
+
+
+    const employeeHireDate = selectedDate ? selectedDate : ''; // Use empty string if null
+
+
+  
     // Construct the payload
     const payload :UserPayload = {
       userName: values.username,
-      comcommittee: parseInt(selectedCommittee,10),
-      department: parseInt(selectedDepartment, 10),
-      unit: parseInt(selectedUnit, 10),
+      employeeHireDate: employeeHireDate,
+
+      comcommittee: parseInt(selectedCommittee!, 10), // Use the non-null assertion operator (!) because it's validated
+      department: parseInt(selectedDepartment!, 10),
+      unit: parseInt(selectedUnit!, 10),
     };
 
     console.log("payload",payload);
@@ -286,6 +312,14 @@ const FormAddition = () => {
             </FormItem>
           )}
         />
+ <Separator className="my-4" />
+
+ <div className="flex flex-col justify-end gap-x-2 space-y-2">
+      
+      <Label className="text-2xl font-bold text-blue-500" >تأريخ التعيين</Label>
+      <DatePicker onDateChange={handleDateChange}  />
+      {/* <h2 className="my-4">{selectedDate}</h2> */}
+      </div>
         
         <Separator className="my-4" />
 

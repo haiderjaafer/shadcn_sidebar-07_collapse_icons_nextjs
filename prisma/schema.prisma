@@ -57,6 +57,8 @@ model unit {
 model Users {
   id             Int      @id @default(autoincrement())
   userName       String   @db.VarChar(100) 
+  employeeHireDate  DateTime @db.Date // Ensure the database column is stored as a date only (not timestamp, if supported)
+
 
   comcommittee   Int
   userCommittee  com      @relation(fields: [comcommittee], references: [co], onDelete: NoAction, onUpdate: NoAction)
