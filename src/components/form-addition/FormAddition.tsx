@@ -33,7 +33,7 @@ import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
 import ComboBoxComponentDepartment from "../form-components/DepartmentCombobox"
 import ComboBoxComponentUnits from "../form-components/ComboBoxComponentUnits"
-import { postUser } from '@/store/slices/userSlice'; // Import your thunk
+import { CreateUserPayload, postUser } from '@/store/slices/userSlice'; // Import your thunk
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store"
 import { TestSelector } from "../Test_Selector"
@@ -103,135 +103,95 @@ const FormAddition = () => {
 
 
 
-    // Form submission handler
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
 
-    console.log(values);
 
-const missingFields: string[] = [];
-
-  // Check for missing fields
-  if (!selectedCommittee) missingFields.push('الهيأة');
-  if (!selectedDepartment) missingFields.push('القسم');
-  if (!selectedUnit) missingFields.push('الوحدة');
-
-  // Show dynamic toast if any field is missing
-  if (missingFields.length > 0) {
+    const employeeHireDate = selectedDate ? selectedDate : '';
+  
+   // Create the FormData object
+  const formData = new FormData();
+  
+    const fileInput = document.querySelector<HTMLInputElement>("#fileInput");
+  if (fileInput && fileInput.files && fileInput.files.length > 0) {
+    formData.append("file", fileInput.files[0]);
+  } else {
     toast({
       className: cn(
-        'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
+        "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
       ),
-      title: "الهيكلية فارغة",
+      title: "خطأ",
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">
-            يجب اختيار: {missingFields.join(', ')}
-          </code>
+          <code className="text-white">يجب إرفاق ملف</code>
         </pre>
       ),
     });
     return;
   }
-
-
-    const employeeHireDate = selectedDate ? selectedDate : ''; // Use empty string if null
-
-
   
-    // Construct the payload
-    const payload :UserPayload = {
+    const payload: CreateUserPayload = {
       userName: values.username,
-      employeeHireDate: employeeHireDate,
-
-      comcommittee: parseInt(selectedCommittee!, 10), // Use the non-null assertion operator (!) because it's validated
+      employeeHireDate,
+      comcommittee: parseInt(selectedCommittee!, 10),
       department: parseInt(selectedDepartment!, 10),
       unit: parseInt(selectedUnit!, 10),
+      employeeNo:"130",                // need got from form
+      file: fileInput?.files?.[0], // Attach the selected file
     };
 
-    console.log("payload",payload);
 
-    // Dispatch the async thunk
-    dispatch(postUser(payload))
-      .unwrap() // Optional: to handle resolved/rejected cases directly
-      .then((response) => {
-        //console.log('User created successfully:', response);
-        toast({
-          className: cn(
-              'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
-            ),
-          title: "اضافة بيانات",
-          description: (
-            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-              <code className="text-white">تم اضافة البيانات بنجاح</code>
-              
-            </pre>
-          ),
-
-        
-        })
-      })
-      .catch((error) => {
-       // console.error('Error creating user:', error);
-       toast({
+    try {
+      // Dispatch the async thunk
+      const response = await dispatch(postUser(payload)).unwrap();
+      console.log("User created successfully:", response);
+  
+      toast({
         className: cn(
-            'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
-          ),
+          "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
+        ),
+        title: "اضافة بيانات",
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">تم اضافة البيانات بنجاح</code>
+          </pre>
+        ),
+      });
+    } catch (error) {
+      console.error("Error creating user:", error);
+      toast({
+        className: cn(
+          "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
+        ),
         title: "خطأ",
         description: (
           <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
             <code className="text-white">حدث خطأ اثناء عملية الاضافة</code>
-            
           </pre>
         ),
-
-      
-      })
       });
-
-
-//       // Access the file from values.image
-//    const file = values.image;
-//    if (file) {
-//      console.log("Selected file:", file);
-//      console.log("File name:", file.name);
-//      console.log("File size:", file.size);
-//      console.log("File type:", file.type);
-//    } else {
-//      console.log("No file selected");
-//    }
-
-
-
-//  toast({
-//             className: cn(
-//                 'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
-//               ),
-//             title: "You submitted the following values:",
-//             description: (
-//               <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-//                 <code className="text-white">{JSON.stringify(values.username, null, 2)}</code>
-//                 <code className="text-white">{JSON.stringify(file?.name, null, 2)}</code>
-//               </pre>
-//             ),
-
-          
-//           })
+    }
 
 
 
 
-
-
-
+  
+    // dispatch(postUser(payload))
+    //   .unwrap()
+    //   .then((response) => {
+    //     console.log('User created successfully:', response);
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error creating user:', error);
+    //   });
   };
-
+  
 
 
 
   return (
 
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 text-right">
+      <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 text-right">
     
     <Card className="w-[550px]">
     <CardHeader>
@@ -363,7 +323,8 @@ const missingFields: string[] = [];
               )}
             />
             
-         
+            
+            <input type="file" id="fileInput" accept=".pdf" required />
     
 
     </CardContent>

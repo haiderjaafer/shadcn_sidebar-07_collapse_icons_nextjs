@@ -2,12 +2,17 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios,{ AxiosError } from 'axios';
 
 
-interface CreateUserPayload {
+export interface CreateUserPayload {
   userName: string;
+  employeeHireDate: string; // Format: YYYY-MM-DD
   comcommittee: number;
   department: number;
   unit: number;
+  employeeNo:string;
+  file?: File; // Optional file field
+
 }
+
 
 interface UserState {
   data: CreateUserPayload | null;
@@ -26,19 +31,38 @@ interface ApiError {
     message: string;
   }
 
-// Async thunk for posting user data
-export const postUser = createAsyncThunk(
+  export const postUser = createAsyncThunk(
     'user/postUser',
     async (payload: CreateUserPayload, { signal, rejectWithValue }) => {
       const controller = new AbortController();
       signal.addEventListener('abort', () => controller.abort());
   
       try {
+        // Construct FormData
+        const formData = new FormData();
+        formData.append('userName', payload.userName);
+        formData.append('employeeHireDate', payload.employeeHireDate);
+        formData.append('comcommittee', payload.comcommittee.toString());
+        formData.append('department', payload.department.toString());
+        formData.append('unit', payload.unit.toString());
+        formData.append('employeeNo', payload.employeeNo);
+  
+        // If a file is included in the payload
+        if (payload.file) {
+          formData.append('file', payload.file);
+        }
+  
         const response = await axios.post(
           'http://localhost:3000/api/users/add-users',
-          payload,
-          { signal: controller.signal } // Pass the signal to Axios
+          formData,
+          {
+            signal: controller.signal, // Pass the signal to Axios
+            headers: {
+              'Content-Type': 'multipart/form-data', // Ensure the correct content type
+            },
+          }
         );
+  
         return response.data;
       } catch (error) {
         if (axios.isCancel(error)) {
@@ -51,7 +75,6 @@ export const postUser = createAsyncThunk(
       }
     }
   );
-  
   
 // Slice definition
 const userSlice = createSlice({

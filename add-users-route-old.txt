@@ -1,0 +1,151 @@
+import { CreateUsersDto } from "@/utiles/dtos";
+import { createUsersleSchema } from "@/utiles/validationSchema";
+import { NextRequest,NextResponse } from "next/server";
+import prisma from '@/utiles/db';
+import { Users } from "@prisma/client";
+import { format } from "date-fns";
+
+
+import fs from 'fs/promises';
+import path from 'path';
+
+export async function POST(request: NextRequest) {
+    try {
+
+
+      const formData = await request.formData();
+
+      // Extract the JSON part of the formData
+      const jsonPayload = formData.get('payload') as string; // Assumes the JSON payload is sent as a string
+      const file = formData.get('file') as File; // Assumes a file input with the name 'file'
+  
+      if (!jsonPayload) {
+        return NextResponse.json(
+          { message: 'Payload is required' },
+          { status: 400 }
+        );
+      }
+
+      console.log("jsonPayload",jsonPayload);
+  
+      const body: CreateUsersDto = JSON.parse(jsonPayload);
+
+     
+  
+      //const body = (await request.json()) as CreateUsersDto;
+
+      console.log("body",body);
+  
+      const validation = createUsersleSchema.safeParse(body);
+      if (!validation.success) {
+        return NextResponse.json({ message: validation.error.errors[0].message }, { status: 400 });
+      }
+
+      if (!file) {
+        return NextResponse.json(
+          { message: 'File is required for upload' },
+          { status: 400 }
+        );
+      }
+
+
+       // Handle file upload
+    const fileBuffer = Buffer.from(await file.arrayBuffer());
+    const filePath = await handleFileUpload(
+      { originalname: file.name, buffer: fileBuffer },
+      // body.userName,
+      "20",
+      new Date(body.employeeHireDate)
+    );
+
+      
+
+      // Format the date to ensure only YYYY-MM-DD is stored
+    const formattedDate = format(new Date(body.employeeHireDate), 'yyyy-MM-dd');
+  
+      const newUser:Users = await prisma.users.create({
+        data: {
+
+          
+     
+        
+          userName:body.userName,
+          employeeHireDate: new Date(formattedDate), // Convert the formatted date back to a Date object
+         comcommittee:body.comcommittee,
+          department:body.department,
+          unit :body.unit
+        }
+      });
+  
+     return NextResponse.json({ user: newUser, filePath }, { status: 201 });
+
+    //return NextResponse.json({ user:"reached" }, { status: 201 });
+
+
+    } catch (error) {
+      console.error("Internal Server Error:", error);
+
+      return NextResponse.json(
+        { message: "internal server error",error: error || error  },
+        { status: 500 }
+      )
+    }
+  }
+
+
+//   {
+//     "userName":"علي حسن محمد عبد اللة",
+//     "employeeHireDate":"2022-10-10",
+//          "comcommittee":6,
+//          "department":58,
+//          "unit" :396
+// }
+
+
+// Utility to create folders if they don't exist
+const createFolderIfNotExists = async (folderPath: string): Promise<void> => {
+  try {
+    if (!(await fs.access(folderPath).catch(() => false))) {
+      await fs.mkdir(folderPath, { recursive: true });
+    }
+  } catch (error) {
+    throw new Error(`Error creating folder: ${folderPath}`);
+  }
+};
+
+// Function to handle file upload
+const handleFileUpload = async (
+  file: { originalname: string; buffer: Buffer },
+  employeeNo: string,
+  employeeHireDate: Date
+): Promise<string> => {
+  try {
+    const currentYear = employeeHireDate.getFullYear();
+    const sanitizedEmployeeNo = employeeNo.replace(/[^a-zA-Z0-9]/g, '_');
+
+    // Determine directory structure
+    const yearFolder = path.join(process.cwd(), `public/uploads/${currentYear}`);
+    const month = (employeeHireDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = employeeHireDate.getDate().toString().padStart(2, '0');
+    const monthFolder = path.join(yearFolder, `${month}`);
+    const dayFolder = path.join(monthFolder, `${day}`);
+
+    // Create directories if they don't exist
+    await createFolderIfNotExists(yearFolder);
+    await createFolderIfNotExists(monthFolder);
+    await createFolderIfNotExists(dayFolder);
+
+    // Create the file name
+    const originalName = file.originalname;
+    const ext = path.extname(originalName);
+    const fileName = `${sanitizedEmployeeNo}_${currentYear}${ext}`;
+    const filePath = path.join(dayFolder, fileName);
+
+    // Write the file to disk
+    await fs.writeFile(filePath, file.buffer);
+
+    return filePath;
+  } catch (error:any) {
+    throw new Error('Error handling file upload: ' + error.message);
+  }
+};

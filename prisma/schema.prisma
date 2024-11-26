@@ -68,6 +68,17 @@ model Users {
 
   unit           Int
   userUnit       unit     @relation(fields: [unit], references: [un], onDelete: NoAction, onUpdate: NoAction)
+  updfUrlsModel  updfUrlsModel[]
+}
+
+
+model updfUrlsModel{
+id             Int      @id @default(autoincrement())
+pdfUrl         String   @db.VarChar(200) 
+pdfUrlDate     DateTime @db.Date
+userID         Int
+userUrl        Users     @relation(fields: [userID], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
 }
 
 
