@@ -40,6 +40,7 @@ import { TestSelector } from "../Test_Selector"
 import { UserPayload } from "@/utiles/types/UserPayload"
 import { format } from "date-fns"
 import { DatePicker } from "../ui/date-picker"
+import DropzoneComponent from "../ReactDropZoneComponont"
 
 
 
@@ -78,14 +79,14 @@ const FormAddition = () => {
         },
       })
 
-        // State to hold the file name
-  const [fileName, setFileName] = useState<string | null>(null);
+    
 
 
   const [selectedCommittee, setSelectedCommittee] = useState<string | undefined>(undefined);
   const [selectedDepartment, setSelectedDepartment] = useState<string | undefined>(undefined);
   const [selectedUnit, setSelectedUnit] = useState<string | undefined>();
 
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
 
 
@@ -94,95 +95,124 @@ const FormAddition = () => {
   const handleDateChange = (date: Date) => {
     console.log("Selected date:", date);
     // You can set this date to state or use it as needed
-    const formattedDate = format(date, "yyyy/MM/dd ");
+    const formattedDate = format(date, "yyyy-MM-dd");
 
     setSelectedDate(formattedDate)
   };
 
 
+  const handleFilesAccepted = (files: File[]) => {
+    setSelectedFiles((prev) => [...prev, ...files]);
+  };
 
+  const handleFileRemoved = (fileName: string) => {
+    setSelectedFiles((prev) => prev.filter((file) => file.name !== fileName));
+  };
 
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-
-
-    const employeeHireDate = selectedDate ? selectedDate : '';
+    const employeeHireDate = selectedDate ? selectedDate : "";
   
-   // Create the FormData object
-  const formData = new FormData();
-  
-    const fileInput = document.querySelector<HTMLInputElement>("#fileInput");
-  if (fileInput && fileInput.files && fileInput.files.length > 0) {
-    formData.append("file", fileInput.files[0]);
-  } else {
-    toast({
-      className: cn(
-        "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
-      ),
-      title: "خطأ",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">يجب إرفاق ملف</code>
-        </pre>
-      ),
-    });
-    return;
-  }
-  
-    const payload: CreateUserPayload = {
-      userName: values.username,
-      employeeHireDate,
-      comcommittee: parseInt(selectedCommittee!, 10),
-      department: parseInt(selectedDepartment!, 10),
-      unit: parseInt(selectedUnit!, 10),
-      employeeNo:"130",                // need got from form
-      file: fileInput?.files?.[0], // Attach the selected file
-    };
-
-
-    try {
-      // Dispatch the async thunk
-      const response = await dispatch(postUser(payload)).unwrap();
-      console.log("User created successfully:", response);
-  
+    // Check if at least one file is selected
+    if (!selectedFiles.length) {
       toast({
         className: cn(
           "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
         ),
-        title: "اضافة بيانات",
+        title: "الملف فارغ",
         description: (
           <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">تم اضافة البيانات بنجاح</code>
+            <code className="text-white">يرجى اختيار ملف PDF</code>
           </pre>
         ),
       });
-    } catch (error) {
-      console.error("Error creating user:", error);
-      toast({
-        className: cn(
-          "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
-        ),
-        title: "خطأ",
-        description: (
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">حدث خطأ اثناء عملية الاضافة</code>
-          </pre>
-        ),
-      });
+      return;
     }
+  
+    // Create the FormData object
+    const formData = new FormData();
+  
+    // Append form fields to FormData
+    formData.append("userName", values.username);
+    formData.append("employeeHireDate", employeeHireDate);
+    formData.append("comcommittee", selectedCommittee!);
+    formData.append("department", selectedDepartment!);
+    formData.append("unit", selectedUnit!);
+    formData.append("employeeNo", "230"); // Assuming employee number is constant or from another input
+  
+    // Append the file(s) to FormData
+    selectedFiles.forEach((file) => formData.append("file", file));
+  
+    // Dispatch the async thunk to post the data
+    dispatch(postUser(formData))
+      .unwrap()
+      .then((response) => {
+        toast({
+          className: cn(
+            "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
+          ),
+          title: "اضافة بيانات",
+          description: (
+            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+              <code className="text-white">تم اضافة البيانات بنجاح</code>
+            </pre>
+          ),
+        });
+      })
+      .catch((error) => {
+        toast({
+          className: cn(
+            "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
+          ),
+          title: "خطأ",
+          description: (
+            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+              <code className="text-white">
+                حدث خطأ اثناء عملية الاضافة: {error}
+              </code>
+            </pre>
+          ),
+        });
+      });
+  
+  
+
+    // try {
+    //   // Dispatch the async thunk
+    //   const response = await dispatch(postUser(payload)).unwrap();
+    //   console.log("User created successfully:", response);
+  
+    //   toast({
+    //     className: cn(
+    //       "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
+    //     ),
+    //     title: "اضافة بيانات",
+    //     description: (
+    //       <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+    //         <code className="text-white">تم اضافة البيانات بنجاح</code>
+    //       </pre>
+    //     ),
+    //   });
+    // } catch (error) {
+    //   console.error("Error creating user:", error);
+    //   toast({
+    //     className: cn(
+    //       "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4"
+    //     ),
+    //     title: "خطأ",
+    //     description: (
+    //       <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+    //         <code className="text-white">حدث خطأ اثناء عملية الاضافة</code>
+    //       </pre>
+    //     ),
+    //   });
+    // }
 
 
 
 
   
-    // dispatch(postUser(payload))
-    //   .unwrap()
-    //   .then((response) => {
-    //     console.log('User created successfully:', response);
-    //   })
-    //   .catch((error) => {
-    //     console.error('Error creating user:', error);
-    //   });
+
   };
   
 
@@ -191,7 +221,7 @@ const FormAddition = () => {
   return (
 
     <Form {...form}>
-      <form noValidate onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 text-right">
+      <form noValidate onSubmit={form.handleSubmit(onSubmit)}  className="space-y-8 text-right">
     
     <Card className="w-[550px]">
     <CardHeader>
@@ -284,55 +314,24 @@ const FormAddition = () => {
         <Separator className="my-4" />
 
        
-      <Label className="text-2xl text-blue-500 font-bold" htmlFor="picture">ملف</Label>
-      <Controller
-              name="image"
-              control={form.control}
-              render={({ field }) => (
-                <div className="flex  items-center justify-end  bg-slate-300 rounded-lg gap-4">
-                  {/* Display the file name below the file input...fileName put it here for display it in right*/}
-                     {fileName && (
-                    <div className="mt-2 text-sm text-gray-600">
-                <strong>{ fileName}</strong> 
-                      </div>
-                       )}
-
-                  {/* Hidden file input */}
-                  <input
-                    id="image"
-                    type="file"
-                    accept=".pdf"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0] || null;
-                      field.onChange(file); // Set the selected file in the form state
-                      setFileName(file ? file.name : null); // Update the file name state
-                     
-
-                    }}
-                    className="hidden" // Hide the default file input
-                  />
-                  {/* Custom label styled as a button */}
-                  <label
-                    htmlFor="image"
-                    className="cursor-pointer px-4 py-2 bg-blue-500 text-white rounded-md"
-                  >
-                    اختر ملف
-                  </label>
-          
-                </div>
-              )}
-            />
+     
             
             
-            <input type="file" id="fileInput" accept=".pdf" required />
+        <DropzoneComponent
+        onFilesAccepted={handleFilesAccepted}
+        onFileRemoved={handleFileRemoved}
+      />
     
 
     </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button variant="outline">Cancel</Button>
-        <Button  type="submit">Submit</Button>
+      <CardFooter className="flex ">
+       
+        <Button  className="font-extrabold text-lg m-auto" type="submit">حفظ</Button>
+
       </CardFooter>
     </Card>
+
+    
 
     </form>
     </Form>

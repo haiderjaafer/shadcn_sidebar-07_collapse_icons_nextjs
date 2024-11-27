@@ -31,50 +31,78 @@ interface ApiError {
     message: string;
   }
 
+
   export const postUser = createAsyncThunk(
-    'user/postUser',
-    async (payload: CreateUserPayload, { signal, rejectWithValue }) => {
+    "user/postUser",
+    async (formData: FormData, { signal, rejectWithValue }) => {
       const controller = new AbortController();
-      signal.addEventListener('abort', () => controller.abort());
+      signal.addEventListener("abort", () => controller.abort());
   
       try {
-        // Construct FormData
-        const formData = new FormData();
-        formData.append('userName', payload.userName);
-        formData.append('employeeHireDate', payload.employeeHireDate);
-        formData.append('comcommittee', payload.comcommittee.toString());
-        formData.append('department', payload.department.toString());
-        formData.append('unit', payload.unit.toString());
-        formData.append('employeeNo', payload.employeeNo);
-  
-        // If a file is included in the payload
-        if (payload.file) {
-          formData.append('file', payload.file);
-        }
-  
-        const response = await axios.post(
-          'http://localhost:3000/api/users/add-users',
-          formData,
-          {
-            signal: controller.signal, // Pass the signal to Axios
-            headers: {
-              'Content-Type': 'multipart/form-data', // Ensure the correct content type
-            },
-          }
-        );
-  
+        const response = await axios.post("http://localhost:3000/api/users/add-users", formData, {
+          signal: controller.signal,
+          headers: {
+            "Content-Type": "multipart/form-data", // Required to handle file uploads
+          },
+        });
         return response.data;
       } catch (error) {
         if (axios.isCancel(error)) {
-          return rejectWithValue('Request cancelled');
+          return rejectWithValue("Request cancelled");
         }
         if (axios.isAxiosError(error)) {
-          return rejectWithValue(error.response?.data?.message || 'Failed to create user');
+          return rejectWithValue(error.response?.data?.message || "Failed to create user");
         }
-        return rejectWithValue('An unexpected error occurred');
+        return rejectWithValue("An unexpected error occurred");
       }
     }
   );
+  
+
+  // export const postUser = createAsyncThunk(
+  //   'user/postUser',
+  //   async (payload: CreateUserPayload, { signal, rejectWithValue }) => {
+  //     const controller = new AbortController();
+  //     signal.addEventListener('abort', () => controller.abort());
+  
+  //     try {
+  //       // Construct FormData
+  //       const formData = new FormData();
+  //       formData.append('userName', payload.userName);
+  //       formData.append('employeeHireDate', payload.employeeHireDate);
+  //       formData.append('comcommittee', payload.comcommittee.toString());
+  //       formData.append('department', payload.department.toString());
+  //       formData.append('unit', payload.unit.toString());
+  //       formData.append('employeeNo', payload.employeeNo);
+  
+  //       // If a file is included in the payload
+  //       if (payload.file) {
+  //         formData.append('file', payload.file);
+  //       }
+  
+  //       const response = await axios.post(
+  //         'http://localhost:3000/api/users/add-users',
+  //         formData,
+  //         {
+  //           signal: controller.signal, // Pass the signal to Axios
+  //           headers: {
+  //             'Content-Type': 'multipart/form-data', // Ensure the correct content type
+  //           },
+  //         }
+  //       );
+  
+  //       return response.data;
+  //     } catch (error) {
+  //       if (axios.isCancel(error)) {
+  //         return rejectWithValue('Request cancelled');
+  //       }
+  //       if (axios.isAxiosError(error)) {
+  //         return rejectWithValue(error.response?.data?.message || 'Failed to create user');
+  //       }
+  //       return rejectWithValue('An unexpected error occurred');
+  //     }
+  //   }
+  // );
   
 // Slice definition
 const userSlice = createSlice({
