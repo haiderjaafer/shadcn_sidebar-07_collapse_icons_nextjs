@@ -71,12 +71,12 @@ const data = {
         },
 
         {
-          title: "الاضافة",
-          url: "/add",
+          title: "توليد رمز استجابة للموظفيين",
+          url: "/generateQRCodesPage",
         },
         {
-          title: "بحث عن الكتب",
-          url: "#",
+          title: "QR code رمز الاستجابة السريع",
+          url: "/employeesQRCode",
         },
         {
           title: "تقارير",

@@ -49,6 +49,9 @@ const formSchema = z.object({
     username: z.string().min(2, {
       message: "يجب ادخال الاسم",
     }),
+    empNo: z.string().min(2, {
+      message: "يجب ادخال رقم الحاسبة",
+    }),
     department: z.string().optional(), // Make department optional
     image: z
     .instanceof(File)
@@ -61,6 +64,7 @@ const formSchema = z.object({
 
   export interface paylaodType{
     userName:string ;
+    empNo:string ;
     comcommittee:number;
     department:number;
     unit:number;
@@ -75,7 +79,8 @@ const FormAddition = () => {
         resolver: zodResolver(formSchema),
         defaultValues: {
           username: "",
-          department:""
+          department:"",
+          empNo:""
         },
       })
 
@@ -138,7 +143,8 @@ const FormAddition = () => {
     formData.append("comcommittee", selectedCommittee!);
     formData.append("department", selectedDepartment!);
     formData.append("unit", selectedUnit!);
-    formData.append("employeeNo", "230"); // Assuming employee number is constant or from another input
+    formData.append("empNo", values.empNo); // Assuming employee number is constant or from another input
+    formData.append("qrCode", "mmmmmmmmmmm");
   
     // Append the file(s) to FormData
     selectedFiles.forEach((file) => formData.append("file", file));
@@ -302,7 +308,29 @@ const FormAddition = () => {
             </FormItem>
           )}
         />
+ 
+
  <Separator className="my-4" />
+   
+
+        <FormField
+          control={form.control}
+          name="empNo"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-2xl font-bold text-blue-500">رقم الحاسبة</FormLabel>
+              <FormControl>
+                <Input placeholder="رقم الحاسبة" className="font-extrabold text-lg " {...field} />
+              </FormControl>
+              {/* <FormDescription>
+                This is your public display name.
+              </FormDescription> */}
+              <FormMessage className="text-2xl font-bold text-red-600" />
+            </FormItem>
+          )}
+        />
+
+
 
  <div className="flex flex-col justify-end gap-x-2 space-y-2">
       

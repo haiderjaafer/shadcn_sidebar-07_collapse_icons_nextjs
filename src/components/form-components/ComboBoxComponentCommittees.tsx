@@ -137,7 +137,7 @@ const ComboBoxComponentCommittees = React.forwardRef<
       </PopoverContent>
     </Popover>
 
-    <div>{fetchUrl}</div>
+    {/* <div>{fetchUrl}</div> */}
 
        {/* Display the selected co value */}
        {/* {selectedCo && (

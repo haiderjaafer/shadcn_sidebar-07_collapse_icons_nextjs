@@ -70,7 +70,7 @@ const ComboBoxComponentUnits: React.FC<Props> = ({ valueType, onChange, fetchUrl
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-[300px] justify-between"
         >
           {valueType
             ? items.find((item) => item.value === valueType)?.label
@@ -78,7 +78,7 @@ const ComboBoxComponentUnits: React.FC<Props> = ({ valueType, onChange, fetchUrl
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-[300px] p-0">
         <Command>
           <input
             placeholder="... البحث عـن وحدة"
@@ -111,7 +111,7 @@ const ComboBoxComponentUnits: React.FC<Props> = ({ valueType, onChange, fetchUrl
         </Command>
       </PopoverContent>
       {/* Optional Debug Info */}
-      <div className="text-sm mt-2 text-gray-500">{fetchUrl}</div>
+      {/* <div className="text-sm mt-2 text-gray-500">{fetchUrl}</div> */}
     </Popover>
   );
 };

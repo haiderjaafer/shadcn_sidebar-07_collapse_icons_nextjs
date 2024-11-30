@@ -17,14 +17,15 @@ export async function POST(request: NextRequest) {
 
    // Extract individual fields from form-data
    const userName = formData.get("userName") as string | null;
+   const empNo = formData.get("empNo") as string | null;
    const employeeHireDate = formData.get("employeeHireDate") as string | null;
    const comcommittee = Number(formData.get("comcommittee"));
    const department = Number(formData.get("department"));
    const unit = Number(formData.get("unit"));
-   const employeeNo = formData.get("employeeNo") as string | null;
+   
    const file = formData.get("file") as File | null;
-
-
+   
+   const qrCode = formData.get("qrCode") as string | null;
   
       const validation = createUsersleSchema.safeParse({
       userName,
@@ -32,7 +33,7 @@ export async function POST(request: NextRequest) {
       comcommittee,
       department,
       unit,
-      employeeNo,
+      empNo,
       
       });
 
@@ -52,7 +53,7 @@ export async function POST(request: NextRequest) {
    // Handle file upload if file exists
    let filePath = null;
    if (file) {
-     filePath = await handleFileUpload(file, employeeNo!, employeeHireDate!);
+     filePath = await handleFileUpload(file, empNo!, employeeHireDate!);
    }
 
       
@@ -60,6 +61,7 @@ export async function POST(request: NextRequest) {
       // Format the date
     const formattedDate = format(new Date(employeeHireDate!), "yyyy-MM-dd");
 
+   
 
     // Save data in a transaction
     const result = await prisma.$transaction(async (tx) => {
@@ -67,10 +69,12 @@ export async function POST(request: NextRequest) {
       const newUser = await tx.users.create({
         data: {
           userName: userName!,
+           empNo : empNo!,
           employeeHireDate: new Date(formattedDate),
           comcommittee,
           department,
           unit,
+           qrCode:  qrCode! 
         },
       });
 

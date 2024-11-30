@@ -42,7 +42,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       
        
     
-            <main className="flex m-auto justify-center">
+            <main className="flex m-auto justify-center ">
            
           <div className="">
             {children}

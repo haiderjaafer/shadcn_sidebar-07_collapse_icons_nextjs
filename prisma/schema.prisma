@@ -10,10 +10,14 @@
 
 //npx prisma studio
 
+// npx prisma generate getUsers.sql    //  getUsers.sql is name of sql file inside prisma folderget
+
 
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["typedSql"]
+
 }
 
 datasource db {
@@ -57,6 +61,7 @@ model unit {
 model Users {
   id             Int      @id @default(autoincrement())
   userName       String   @db.VarChar(100) 
+  empNo          String   @unique
   employeeHireDate  DateTime @db.Date // Ensure the database column is stored as a date only (not timestamp, if supported)
 
 
@@ -69,6 +74,7 @@ model Users {
   unit           Int
   userUnit       unit     @relation(fields: [unit], references: [un], onDelete: NoAction, onUpdate: NoAction)
   updfUrlsModel  updfUrlsModel[]
+  qrCode         String   @db.VarChar(max) 
 }
 
 

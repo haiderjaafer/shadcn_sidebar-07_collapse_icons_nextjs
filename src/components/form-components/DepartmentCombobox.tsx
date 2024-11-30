@@ -79,7 +79,7 @@ const ComboBoxComponentDepartment = React.forwardRef<HTMLButtonElement, ComboBox
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-[200px] justify-between"
+            className="w-[300px] justify-between"
           >
             {valueType
               ? items.find((item) => item.value === valueType)?.label
@@ -87,7 +87,7 @@ const ComboBoxComponentDepartment = React.forwardRef<HTMLButtonElement, ComboBox
             <ChevronsUpDown className="opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0">
+        <PopoverContent className="w-[300px] p-0">
           <Command>
           <input
 
@@ -122,7 +122,7 @@ className="w-full p-1 text-right mr-2 text-lg font-normal text-black outline-non
             </CommandList>
           </Command>
         </PopoverContent>
-        <div>{fetchUrl}</div>
+        {/* <div>{fetchUrl}</div> */}
       </Popover>
     );
   }
