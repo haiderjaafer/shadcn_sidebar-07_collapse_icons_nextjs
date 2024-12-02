@@ -7,14 +7,14 @@ import { Button } from "@/components/ui/button"
 import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage,} from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import React, { useState } from 'react'
-import ComboBoxComponentCommittees from '../form-components/ComboBoxComponentCommittees'
+import ComboBoxComponentCommittees from '../form-components/ComboBoxCommitteesComponent'
 import { Label } from "@/components/ui/label"
 import {Card,CardContent, CardDescription, CardFooter, CardHeader, CardTitle  } from "@/components/ui/card"
 import { ToastAction } from "@radix-ui/react-toast"
 import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
-import ComboBoxComponentDepartment from "../form-components/DepartmentCombobox"
-import ComboBoxComponentUnits from "../form-components/ComboBoxComponentUnits"
+import ComboBoxComponentDepartment from "../form-components/ComboBoxDepartmentsComponent"
+import ComboBoxComponentUnits from "../form-components/ComboBoxUnitsComponent"
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store"
 import { UserPayload } from "@/utiles/types/UserPayload"
@@ -100,9 +100,9 @@ const GenerateQRCodeComponent = () => {
 <Form {...form}>
       <form noValidate onSubmit={form.handleSubmit(onSubmit)}  className="space-y-1 text-right">
     
-    <Card className=" w-[1200px] h-[650px]">
+    <Card className=" w-[1200px] h-[650px] min-h-screen">
     <CardHeader>
-      <CardTitle className="text-3xl font-extrabold text-center ">الاضافة</CardTitle>
+      {/* <CardTitle className="text-3xl font-extrabold text-center ">الاضافة</CardTitle> */}
       <CardDescription className="text-2xl font-extrabold text-center ">صفحة انشاء رمز الاستجابة </CardDescription>
     </CardHeader>
     <CardContent>

@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import React, { useState } from 'react'
-import ComboBoxComponentCommittees from '../form-components/ComboBoxComponentCommittees'
+import ComboBoxComponentCommittees from '../form-components/ComboBoxCommitteesComponent'
 import { Label } from "@/components/ui/label"
 import {
     Card,
@@ -31,8 +31,8 @@ import {
 import { ToastAction } from "@radix-ui/react-toast"
 import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
-import ComboBoxComponentDepartment from "../form-components/DepartmentCombobox"
-import ComboBoxComponentUnits from "../form-components/ComboBoxComponentUnits"
+import ComboBoxComponentDepartment from "../form-components/ComboBoxDepartmentsComponent"
+import ComboBoxComponentUnits from "../form-components/ComboBoxUnitsComponent"
 import { CreateUserPayload, postUser } from '@/store/slices/userSlice'; // Import your thunk
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store"

@@ -19,6 +19,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { useEffect, useState } from "react"
+import { Separator } from "@radix-ui/react-separator"
 
 
 
@@ -81,7 +82,15 @@ const ComboBoxComponentCommittees = React.forwardRef<
   );
 
   return (
-    <div>
+    <div className="flex flex-col items-end justify-end">
+
+     
+        <label className="font-extrabold text-lg mb-1">الهيأة</label>
+        
+        
+
+
+     
     <Popover open={open} onOpenChange={setOpen} >
       <PopoverTrigger asChild >
         <Button
@@ -91,28 +100,35 @@ const ComboBoxComponentCommittees = React.forwardRef<
           aria-expanded={open}
           className="w-[300px] justify-between"
         >
-          {valueType
+       <div className="font-bold">
+       {valueType
             ? committees.find((committee) => committee.value === valueType)?.label 
-            : "البحث عن هيأة..."}
+            : "أختر الهيأة"}
+       </div>
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-0 text-center ">
         <Command>
+        
         <input
 
   placeholder="... البحث عـن هيأة "
   value={searchQuery}
-  className="w-full p-1 text-right mr-2 text-lg font-normal text-black outline-none   "
+  className="w-full p-1 text-right mr-2 text-lg font-normal text-black outline-none pr-5"
    onChange={(e) => setSearchQuery((e.target as HTMLInputElement).value)} // Intercept input changes
 
 />
-          <CommandList >
+
+          <CommandList  >
             <CommandEmpty className="font-bold text-center p-2 text-red-700 ">لا توجد هيأة </CommandEmpty>
             <CommandGroup className="bg-slate-100 text-center ">
               {filteredCommittees.map((committee) => (
-                <CommandItem
-                   className="text-blue-500 text-center "
+
+                <div className="font-extrabold">
+
+<CommandItem
+                   className="text-black text-center "
                   key={committee.value}
                   value={committee.value}
                   onSelect={(currentValue) => {
@@ -122,14 +138,15 @@ const ComboBoxComponentCommittees = React.forwardRef<
                     setOpen(false);
                   }}
                 > 
-                  <div className="">{committee.label}</div>
+                  <div className="m-auto hover:text-blue-500 transition-colors duration-100">{committee.label}</div>
                   <Check
                     className={cn(
-                      "ml-auto",
+                      "m-0",
                       valueType === committee.value ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>
+                </div>
               ))}
             </CommandGroup>
           </CommandList>
@@ -145,7 +162,8 @@ const ComboBoxComponentCommittees = React.forwardRef<
           <strong>Selected Committee Co Value:</strong> {selectedCo}
         </div>
       )} */}
-    </div>
+      </div>
+   
   );
 });
 

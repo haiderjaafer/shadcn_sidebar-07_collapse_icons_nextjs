@@ -72,6 +72,11 @@ const ComboBoxComponentDepartment = React.forwardRef<HTMLButtonElement, ComboBox
     );
 
     return (
+
+      <div className="flex flex-col items-end justify-end" >
+
+        <label className="font-extrabold text-lg mb-1">القسم</label>
+
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -79,11 +84,13 @@ const ComboBoxComponentDepartment = React.forwardRef<HTMLButtonElement, ComboBox
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-[300px] justify-between"
+            className="w-[300px] justify-between font-bold"
           >
-            {valueType
+             <div className='font-bold'>
+             {valueType
               ? items.find((item) => item.value === valueType)?.label
-              : 'Select an option'}
+              : 'اختر القسم'}
+             </div>
             <ChevronsUpDown className="opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -91,17 +98,20 @@ const ComboBoxComponentDepartment = React.forwardRef<HTMLButtonElement, ComboBox
           <Command>
           <input
 
-placeholder="... البحث عـن هيأة "
+placeholder="... البحث عـن القسم "
 value={searchQuery}
-className="w-full p-1 text-right mr-2 text-lg font-normal text-black outline-none   "
+className="w-full p-1 text-right mr-2 text-lg font-normal text-black outline-none pr-5"
  onChange={(e) => setSearchQuery((e.target as HTMLInputElement).value)} // Intercept input changes
 
 />
             <CommandList>
-              <CommandEmpty>No items found.</CommandEmpty>
+              <CommandEmpty className="font-bold text-center p-2 text-red-700 ">لا يوجد قسم</CommandEmpty>
               <CommandGroup>
                 {filteredItems.map((item) => (
-                  <CommandItem
+               <div className='font-extrabold'>
+
+<CommandItem
+                  className="text-black font-bold "
                     key={item.value}
                     value={item.value}
                     onSelect={() => {
@@ -109,14 +119,16 @@ className="w-full p-1 text-right mr-2 text-lg font-normal text-black outline-non
                       setOpen(false);
                     }}
                   >
-                    {item.label}
+                    <div className=' m-auto hover:text-blue-500 transition-colors duration-100'>{item.label} </div>    
                     <Check
                       className={cn(
-                        'ml-auto',
+                        'm-0',
                         valueType === item.value ? 'opacity-100' : 'opacity-0'
                       )}
                     />
                   </CommandItem>
+
+               </div>
                 ))}
               </CommandGroup>
             </CommandList>
@@ -124,8 +136,14 @@ className="w-full p-1 text-right mr-2 text-lg font-normal text-black outline-non
         </PopoverContent>
         {/* <div>{fetchUrl}</div> */}
       </Popover>
+
+      </div>
+
     );
+
+   
   }
+  
 );
 
 ComboBoxComponentDepartment.displayName = 'ComboBoxComponentDepartment';
