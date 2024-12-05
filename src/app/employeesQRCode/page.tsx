@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
 import { fetchEmployees } from '@/store/slices/employeesQRCodeSlice';
@@ -8,6 +8,9 @@ import Image from 'next/image';
 import { Employee } from '@/store/slices/employeesQRCodeSlice';
 import { format } from "date-fns";
 import { useRouter } from 'next/router';
+import { Ellipsis } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { UpdateEmployeeSheet } from './operations/UpdateEmployeeSheet ';
 
 
 
@@ -17,6 +20,9 @@ const EmployeesPage = () => {
   // const { empNo } = router.query; // Get empNo from query parameters
 
   // console.log(empNo)
+
+  const [rowAction, setRowAction] = useState<{ type: string; row: any } | null>(null)
+
 
   const dispatch = useDispatch<AppDispatch>();
   const { employees, loading, error } = useSelector((state: RootState) => state.employeesQRCodeReducer);
@@ -46,119 +52,168 @@ const EmployeesPage = () => {
   if (!employees || employees.length === 0) {
     return <p>No employees found.</p>;
   }
+
+
+   // Simulated function to open the UpdateEmployeeSheet
+   const handleRowAction = (row: any) => {
+    setRowAction({
+      type: "update",
+      row,
+    })
+  }
+
+
   return (
 
 
-    <div className="max-w-screen-lg mx-auto px-6">
-    <h1 className="text-2xl font-bold mb-4 text-center">Responsive Table</h1>
-  
-    <div className="overflow-x-auto shadow-lg rounded-lg border border-gray-700">
-      <table className="w-full border-collapse bg-gray-800 text-white">
-        {/* Table Header */}
-        <thead className="hidden md:table-header-group">
-          <tr>
-            <th className="p-4 bg-gray-900 text-left uppercase font-bold">User Name</th>
-            <th className="p-4 bg-gray-900 text-left uppercase font-bold">Employee Number</th>
-            <th className="p-4 bg-gray-900 text-left uppercase font-bold">Hire Date</th>
-            <th className="p-4 bg-gray-900 text-left uppercase font-bold">Committee</th>
-            <th className="p-4 bg-gray-900 text-left uppercase font-bold">Department</th>
-            <th className="p-4 bg-gray-900 text-left uppercase font-bold">Unit</th>
-            <th className="p-4 bg-gray-900 text-left uppercase font-bold">QR Code</th>
+    <div className="max-w-screen-x2 mx-auto px-6">
+  <h1 className="text-2xl font-bold mb-6 text-center">Responsive Table</h1>
+
+  <div className="overflow-x-auto shadow-lg rounded-lg border border-gray-700 bg-gray-800">
+    <table className="w-full border-collapse text-white">
+      {/* Table Head - Visible Only on lg and Above */}
+      <thead className="hidden lg:table-header-group">
+        <tr>
+          <th className="p-4 bg-gray-900 text-center uppercase font-bold">User Name</th>
+          <th className="p-4 bg-gray-900 text-center uppercase font-bold">Employee Number</th>
+          <th className="p-4 bg-gray-900 text-center uppercase font-bold">Hire Date</th>
+          <th className="p-4 bg-gray-900 text-center uppercase font-bold">Committee</th>
+          <th className="p-4 bg-gray-900 text-center uppercase font-bold">Department</th>
+          <th className="p-4 bg-gray-900 text-center uppercase font-bold">Unit</th>
+          <th className="p-4 bg-gray-900 text-center uppercase font-bold">QR Code</th>
+          <th className="p-4 bg-gray-900 text-left uppercase font-bold">Operation</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {employees.map((employee: Employee, index) => (
+          <tr
+            key={index}
+            className={`block border-b border-gray-700 lg:table-row ${
+              index % 2 === 0 ? "bg-gray-800" : "bg-gray-900"
+            }`}
+          >
+            {/* Data for Small and Medium Screens (sm and md) */}
+            <td className="block lg:table-cell p-4">
+              <div className="flex justify-between">
+                <span className="font-bold uppercase text-gray-400">User Name:</span>
+                <span className="ml-2">{employee.userName}</span>
+              </div>
+            </td>
+
+            <td className="block lg:table-cell p-4">
+              <div className="flex justify-between">
+                <span className="font-bold uppercase text-gray-400">Employee Number:</span>
+                <span className="ml-2">{employee.empNo}</span>
+              </div>
+            </td>
+
+            <td className="block lg:table-cell p-4">
+              <div className="flex justify-between">
+                <span className="font-bold uppercase text-gray-400">Hire Date:</span>
+                <span className="ml-2">{format(new Date(employee.employeeHireDate), 'yyyy-MM-dd')}</span>
+              </div>
+            </td>
+
+            <td className="block lg:table-cell p-4">
+              <div className="flex justify-between">
+                <span className="font-bold uppercase text-gray-400">Committee:</span>
+                <span className="ml-2">{employee.committee}</span>
+              </div>
+            </td>
+
+            <td className="block lg:table-cell p-4">
+              <div className="flex justify-between">
+                <span className="font-bold uppercase text-gray-400">Department:</span>
+                <span className="ml-2">{employee.department}</span>
+              </div>
+            </td>
+
+            <td className="block lg:table-cell p-4">
+              <div className="flex justify-between">
+                <span className="font-bold uppercase text-gray-400">Unit:</span>
+                <span className="ml-2">{employee.unit}</span>
+              </div>
+            </td>
+
+            <td className="block lg:table-cell p-1 text-center ">
+              <Image
+                src={employee.qrCode}
+                alt={`${employee.userName} QR Code`}
+                width={50}
+                height={50}
+                className="mt-2 mx-auto my-auto lg:mx-0"
+                onClick={(e)=> {
+                  alert("show qrcode here")
+                }}
+              />
+            </td>
+
+        
+            <td className="block lg:table-cell p-4 text-center">
+{/* DropdownMenu for Ellipsis */}
+<DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button>
+                    <Ellipsis
+                onClick={() => alert(`Operations for ${employee.userName + employee.empNo}`)}
+                className="h-6 w-6 text-white cursor-pointer mx-auto lg:mx-0"
+              />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="bg-gray-900 text-white">
+                    <DropdownMenuItem
+                      onClick={() => 
+                        //alert("Edit clicked")
+
+                        setRowAction({
+                          type: "update",
+                          row: employee, // Pass employee data to the action
+                        })
+
+
+                      }
+                      className="cursor-pointer"
+                    >
+                      Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => alert("Delete clicked")}
+                      className="cursor-pointer text-red-500"
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </td>
+
+
           </tr>
-        </thead>
-  
-        {/* Table Body */}
-        <tbody>
-          {employees.map((employee: Employee, index) => (
-            <tr
-              key={index}
-              className={`block md:table-row p-4 border-b border-gray-700 ${
-                index % 2 === 0 ? "bg-gray-800" : "bg-gray-900"
-              }`}
-            >
-              {/* Responsive Row - Mobile */}
-              <td className="block md:table-cell p-2">
-                <span className="block font-bold md:hidden uppercase text-gray-400">User Name</span>
-                <span>{employee.userName}</span>
-              </td>
-  
-              <td className="block md:table-cell p-2">
-                <span className="block font-bold md:hidden uppercase text-gray-400">Employee Number</span>
-                <span>{employee.empNo}</span>
-              </td>
-  
-              <td className="block md:table-cell p-2">
-                <span className="block font-bold md:hidden uppercase text-gray-400">Hire Date</span>
-                <span>{format(new Date(employee.employeeHireDate), 'yyyy-MM-dd')}</span>
-              </td>
-  
-              <td className="block md:table-cell p-2">
-                <span className="block font-bold md:hidden uppercase text-gray-400">Committee</span>
-                <span>{employee.committee}</span>
-              </td>
-  
-              <td className="block md:table-cell p-2">
-                <span className="block font-bold md:hidden uppercase text-gray-400">Department</span>
-                <span>{employee.department}</span>
-              </td>
-  
-              <td className="block md:table-cell p-2">
-                <span className="block font-bold md:hidden uppercase text-gray-400">Unit</span>
-                <span>{employee.unit}</span>
-              </td>
-  
-              <td className="block md:table-cell p-2">
-                <span className="block font-bold md:hidden uppercase text-gray-400">QR Code</span>
-                <Image
-                  src={employee.qrCode}
-                  alt={`${employee.userName} QR Code`}
-                  width={100}
-                  height={100}
-                  className="mx-auto md:mx-0"
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        ))}
+      </tbody>
+    </table>
+    <div>
+      {/* UpdateEmployeeSheet Component */}
+      {rowAction && rowAction.type === "update" && (
+        <UpdateEmployeeSheet
+          open={rowAction.type === "update"} // Open if type is update
+          onOpenChange={() => setRowAction(null)} // Close the sheet on dismiss
+          employee={rowAction.row} // Pass the selected employee data
+        />
+      )}
     </div>
   </div>
+
+ 
+</div>
+
   
   
+  
 
 
   
-    // <>
 
-    
-     
-      
-
-    // <div className="container mx-auto p-4">
-    //      {/* <button
-    //       onClick={() =>
-    //         //Dispatch the action with vote "up"
-    //         dispatch(fetchEmployees({ committee: '6', department: '58', unit: '396' }))
-    //       }
-    //     >
-    //       click
-    //     </button> */}
-    //   <h1 className="text-2xl font-bold mb-4">Employee QR Codes</h1>
-    //   <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    //   {employees.map((employee: Employee, index) => (
-    //       <li className="p-4 border rounded-lg shadow-lg" key={index}>
-    //         <p className="text-lg font-semibold">Employee Name: {employee.userName}</p>
-    //         <p>Emp No: {employee.empNo}</p>
-    //         <p>Hire Date:  { format( new Date(employee.employeeHireDate).toLocaleDateString(),'yyyy-MM-dd')}</p>
-    //         <p>Committee: {employee.committee}</p>
-    //         <p>Department: {employee.department}</p>
-    //         <p>Unit: {employee.unit}</p>
-    //         <Image className="mt-4" src={employee.qrCode} alt={`${employee.userName} QR Code`} width="200" height="200" />
-    //       </li>
-    //     ))}
-    //   </ul>
-    // </div>
-    // </>
 
     
   );
