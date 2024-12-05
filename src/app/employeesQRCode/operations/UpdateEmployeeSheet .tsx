@@ -22,7 +22,7 @@ import { Textarea } from "@/components/ui/textarea"
 
 //import { updateEmployeeSchema, type UpdateEmployeeSchema } from "../_lib/validations"
 import { RootState } from "@/store/store"
-import { UpdateEmployeeSchema, updateEmployeeSchema } from "@/utiles/types/UserPayload"
+import { UpdateEmployeeSchema, updateEmployeeSchema } from "@/utiles/validationSchema"
 
 // Define the props for the component
 interface UpdateEmployeeSheetProps extends React.ComponentPropsWithRef<typeof Sheet> {
@@ -32,7 +32,8 @@ interface UpdateEmployeeSheetProps extends React.ComponentPropsWithRef<typeof Sh
 
 export function UpdateEmployeeSheet({ employee, ...props }: UpdateEmployeeSheetProps) {
   const [isUpdatePending, startUpdateTransition] = React.useTransition()
-  const { employees } = useSelector((state: RootState) => state.employeesQRCodeReducer)
+  
+  //const { employees } = useSelector((state: RootState) => state.employeesQRCodeReducer)
 
   const form = useForm<UpdateEmployeeSchema>({
     resolver: zodResolver(updateEmployeeSchema),

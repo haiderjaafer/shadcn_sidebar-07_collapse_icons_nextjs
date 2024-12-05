@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
 import { fetchEmployees } from '@/store/slices/employeesQRCodeSlice';
@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 import { Ellipsis } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { UpdateEmployeeSheet } from './operations/UpdateEmployeeSheet ';
+import ShowQrCodeDialog from './operations/ShowQrCodeDialog';
 
 
 
@@ -22,6 +23,9 @@ const EmployeesPage = () => {
   // console.log(empNo)
 
   const [rowAction, setRowAction] = useState<{ type: string; row: any } | null>(null)
+  const [isQrDialogOpen, setIsQrDialogOpen] = useState(false);
+
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
 
 
   const dispatch = useDispatch<AppDispatch>();
@@ -87,51 +91,54 @@ const EmployeesPage = () => {
 
       <tbody>
         {employees.map((employee: Employee, index) => (
-          <tr
+          
+         <Fragment key={employee.empNo}>
+
+<tr
             key={index}
-            className={`block border-b border-gray-700 lg:table-row ${
+            className={`block border-b border-gray-700 lg:table-row relative ${
               index % 2 === 0 ? "bg-gray-800" : "bg-gray-900"
             }`}
           >
             {/* Data for Small and Medium Screens (sm and md) */}
             <td className="block lg:table-cell p-4">
               <div className="flex justify-between">
-                <span className="font-bold uppercase text-gray-400">User Name:</span>
+                {/* <span className="font-bold uppercase text-gray-400">User Name:</span> */}
                 <span className="ml-2">{employee.userName}</span>
               </div>
             </td>
 
             <td className="block lg:table-cell p-4">
               <div className="flex justify-between">
-                <span className="font-bold uppercase text-gray-400">Employee Number:</span>
+                {/* <span className="font-bold uppercase text-gray-400">Employee Number:</span> */}
                 <span className="ml-2">{employee.empNo}</span>
               </div>
             </td>
 
             <td className="block lg:table-cell p-4">
               <div className="flex justify-between">
-                <span className="font-bold uppercase text-gray-400">Hire Date:</span>
+                {/* <span className="font-bold uppercase text-gray-400">Hire Date:</span> */}
                 <span className="ml-2">{format(new Date(employee.employeeHireDate), 'yyyy-MM-dd')}</span>
               </div>
             </td>
 
             <td className="block lg:table-cell p-4">
               <div className="flex justify-between">
-                <span className="font-bold uppercase text-gray-400">Committee:</span>
+                {/* <span className="font-bold uppercase text-gray-400">Committee:</span> */}
                 <span className="ml-2">{employee.committee}</span>
               </div>
             </td>
 
             <td className="block lg:table-cell p-4">
               <div className="flex justify-between">
-                <span className="font-bold uppercase text-gray-400">Department:</span>
+                {/* <span className="font-bold uppercase text-gray-400">Department:</span> */}
                 <span className="ml-2">{employee.department}</span>
               </div>
             </td>
 
             <td className="block lg:table-cell p-4">
               <div className="flex justify-between">
-                <span className="font-bold uppercase text-gray-400">Unit:</span>
+                {/* <span className="font-bold uppercase text-gray-400">Unit:</span> */}
                 <span className="ml-2">{employee.unit}</span>
               </div>
             </td>
@@ -142,10 +149,14 @@ const EmployeesPage = () => {
                 alt={`${employee.userName} QR Code`}
                 width={50}
                 height={50}
-                className="mt-2 mx-auto my-auto lg:mx-0"
-                onClick={(e)=> {
-                  alert("show qrcode here")
-                }}
+                className="mt-2 mx-auto my-auto lg:mx-0 cursor-pointer"
+                onClick={() => { 
+
+                  setSelectedEmployee(employee);
+
+                  setIsQrDialogOpen(true)
+                
+                 } } // Open dialog on image click
               />
             </td>
 
@@ -188,10 +199,35 @@ const EmployeesPage = () => {
               </td>
 
 
+
           </tr>
+ 
+
+
+
+         </Fragment>
+
+ 
+
         ))}
+
+ 
       </tbody>
     </table>
+
+   {/* Render Modal Outside of Table */}
+   {selectedEmployee && (
+        <ShowQrCodeDialog
+          open={isQrDialogOpen}
+          onOpenChange={(isOpen:any) => {
+            if (!isOpen) setSelectedEmployee(null); // Reset selected employee
+            setIsQrDialogOpen(isOpen);
+          }}
+          qrCodeUrl={selectedEmployee.qrCode}
+          userName={selectedEmployee.userName}
+        />
+      )}
+
     <div>
       {/* UpdateEmployeeSheet Component */}
       {rowAction && rowAction.type === "update" && (

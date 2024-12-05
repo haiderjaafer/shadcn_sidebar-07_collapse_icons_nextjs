@@ -7,14 +7,3 @@ export type UserPayload = {
     unit: number;
   };
 
-
-  import * as z from "zod"
-
-export const updateEmployeeSchema = z.object({
-  userName: z.string().min(1, "User name is required"),
-  empNo: z.string().min(1, "Employee number is required"),
-  department: z.string().optional(),
-  unit: z.string().optional(),
-})
-
-export type UpdateEmployeeSchema = z.infer<typeof updateEmployeeSchema>
