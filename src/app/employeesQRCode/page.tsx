@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, use, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
 import { fetchEmployees } from '@/store/slices/employeesQRCodeSlice';
@@ -12,10 +12,13 @@ import { Ellipsis } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { UpdateEmployeeSheet } from './operations/UpdateEmployeeSheet ';
 import ShowQrCodeDialog from './operations/ShowQrCodeDialog';
+import { SearchBar } from '@/components/searchParamsExample/searchbar';
+import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
 
-
-const EmployeesPage = () => {
+const EmployeesPage = (
+ ) => {
 
   // const router = useRouter();
   // const { empNo } = router.query; // Get empNo from query parameters
@@ -31,9 +34,36 @@ const EmployeesPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { employees, loading, error } = useSelector((state: RootState) => state.employeesQRCodeReducer);
 
+  const searchParams = useSearchParams();
+  const empNo = searchParams.get('empNo') || '';
+
+  async function getEmpNoBasedOnSearch(empNo: string) {                        // this function must in apiCall
+    const response = await fetch(`/api/getQRCodeBYempNo?empNo=${empNo}`);
+
+    
+  
+    if (!response.ok) {
+      throw new Error("Failed to fetch articles");
+    }
+  
+    return response.json();
+  }
+
+
+   function QRCodeDisplay({ empNo }: { empNo: string }) {
+
+   //console.log("QRCodeDisplay emp on ....",QRCodeDisplay);
+    const qrCodeData =  getEmpNoBasedOnSearch(empNo); // Server function
+ 
+    console.log("QRCodeDisplay",qrCodeData);
+
+    // return <p>QR Code Data: {JSON.stringify(qrCodeData)}</p>;  // was as like this
+    return <p></p>;
+  }
+
   useEffect(() => {
     console.log("useEffect called"); // Check if this is logged
-   
+    //getEmpNoBasedOnSearch(empNo);
 
     // Fetch data with specified query parameters
     dispatch(fetchEmployees({ committee: '6', department: '58', unit: '396' }));
@@ -42,8 +72,19 @@ const EmployeesPage = () => {
 //   if (!Array.isArray(employees)) {
 //     return <p>Invalid data structure received</p>;
 //   }
+
+
+const query = searchParams.get('empNo')?.toLowerCase() || '';
+
+
+  // Filter employees based on the search query
+  const filteredEmployees = employees.filter((employee) =>
+    employee.userName.toLowerCase().includes(query) ||
+    employee.empNo.toLowerCase().includes(query)
+  );
+
   
-  
+  console.log("empNo",empNo);
 
   if (loading) {
     return <p>Loading...</p>;
@@ -73,6 +114,13 @@ const EmployeesPage = () => {
     <div className="max-w-screen-x2 mx-auto px-6">
   <h1 className="text-2xl font-bold mb-6 text-center">Responsive Table</h1>
 
+
+ <div> <SearchBar /></div>
+
+ <Suspense fallback={<p>Loading QR Code...</p>}>
+        <QRCodeDisplay empNo={empNo} />
+        
+      </Suspense>
   <div className="overflow-x-auto shadow-lg rounded-lg border border-gray-700 bg-gray-800">
     <table className="w-full border-collapse text-white">
       {/* Table Head - Visible Only on lg and Above */}
@@ -90,7 +138,10 @@ const EmployeesPage = () => {
       </thead>
 
       <tbody>
-        {employees.map((employee: Employee, index) => (
+
+      {/* {employees.map((employee: Employee, index) => ( */  }   
+
+        {filteredEmployees.map((employee: Employee, index) => (
           
          <Fragment key={employee.empNo}>
 

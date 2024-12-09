@@ -30,6 +30,8 @@ export const fetchEmployees = createAsyncThunk<Employee[], { committee: string; 
     "employees/fetchEmployees",
     async ({ committee, department, unit }: { committee: string; department: string; unit: string }) => {
 
+     
+
       const response = await axios.get<{ employee: { user: Employee }[] }>(
         `/api/getAllQRcodes?committee=${committee}&department=${department}&unit=${unit}` );
         
