@@ -90,8 +90,8 @@ const data = {
       icon: Bot,
       items: [
         {
-          title: "Genesis",
-          url: "#",
+          title: "Search by Emo No",
+          url: "/employees",
         },
         {
           title: "Explorer",
