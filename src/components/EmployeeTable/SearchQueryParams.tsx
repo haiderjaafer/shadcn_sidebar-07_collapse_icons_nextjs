@@ -25,8 +25,8 @@ const Search = () => {
     <div className="relative flex flex-1">
       <input
         type="text"
-        className="w-full border border-gray-200 py-2 pl-10 text-sm outline-2 rounded-sm"
-        placeholder="Search..."
+        className="w-full border placeholder:text-black  text-right outline-none pr-3 text-white border-gray-200 py-3 px-4  text-sm outline-2 rounded-lg bg-slate-500 "
+        placeholder="رقم الحاسبة"
         onChange={(e) => handleSearch(e.target.value)}
         defaultValue={searchParams.get("empNo")?.toString()}
       />

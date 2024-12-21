@@ -3,6 +3,7 @@
 import {FormUser} from "@/components/context-component/FormUser";
 import UserCheck from "@/components/context-component/UserCheck";
 import { TestSelector } from "@/components/Test_Selector";
+import TestGrid from "@/components/TestGrid";
 import { UserContextProvider } from "@/context/UserContext";
 import { AppDispatch, RootState } from "@/store/store";
 import Image from "next/image";
@@ -31,6 +32,7 @@ export default function Home() {
       </h1>
 
       <TestSelector/>
+      <TestGrid/>
       
       <ul className="text-xl my-6 ml-6 list-decimal [&>li]:mt-2">
         <li>Installation and Setup </li>
