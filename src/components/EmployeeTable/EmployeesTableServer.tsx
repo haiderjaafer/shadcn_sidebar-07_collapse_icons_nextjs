@@ -14,6 +14,8 @@ export const EmployeesTableServer = async ({
   
     const employees = await getAllEmployees(empNo, currentPage);
 
+   
+
     
 
   return <EmployeesTableClient employees={employees} />;

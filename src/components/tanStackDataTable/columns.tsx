@@ -13,7 +13,18 @@ import ProjectLastUpdate from "./ProjectLastUpdate";
 import ProjectResources from "./ProjectResources";
 import ProjectTimeLine from "./ProjectTimeLine";
 import { ProjectActions } from "./ProjectActions";
+import { format } from "date-fns";
 
+
+export interface Employee {
+  userName: string;
+  empNo: string;
+  employeeHireDate: string; // ISO string
+  comcommittee: number;
+  department: string;
+  unit: string;
+  qrCode: string;
+}
 
 
 function formatCurrency(amount: number) {
@@ -23,7 +34,8 @@ function formatCurrency(amount: number) {
   return `US$ ${amount}`;
 }
 
-export const columns: ColumnDef<Project>[] = [
+
+export const columns: ColumnDef<Employee>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -57,67 +69,70 @@ export const columns: ColumnDef<Project>[] = [
     enableSorting: true,
   },
   {
-    accessorKey: "name",
+    accessorKey: "userName",
     header: ({ column }) => (
-      <SortableHeader column={column} title="اسم المستخدم " />
+      <SortableHeader column={column} title="اسم المستخدم" />
     ),
-    cell: ({ row }) => <ProjectName name={row.getValue("name")} />,
+    cell: ({ row }) => <div>{row.getValue("userName")}</div>,
     enableSorting: true,
   },
   {
-    accessorKey: "project_manager",
-    header: "PM",
-    cell: ({ row }) => (
-      <ProjectManager name={row.getValue("project_manager")} />
-    ),
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => <ProjectStatus status={row.getValue("status")} />,
-  },
-  {
-    accessorKey: "last_updated",
+    accessorKey: "empNo",
     header: ({ column }) => (
-      <SortableHeader column={column} title="Last updated" />
+      <SortableHeader column={column} title="رقم الموظف" />
+    ),
+    cell: ({ row }) => <div>{row.getValue("empNo")}</div>,
+    enableSorting: true,
+  },
+  {
+    accessorKey: "employeeHireDate",
+    header: ({ column }) => (
+      <SortableHeader column={column} title="تاريخ التعيين" />
     ),
     cell: ({ row }) => (
-      <ProjectLastUpdate date={row.getValue("last_updated")} />
+      <div>
+        {row.getValue("employeeHireDate")
+          ? format(new Date(row.getValue("employeeHireDate")), "yyyy-MM-dd")
+          : "N/A"}
+      </div>
     ),
     enableSorting: true,
   },
   {
-    accessorKey: "resources",
-    header: "Resources",
-    cell: ({ row }) => (
-      <ProjectResources resources={row.getValue("resources")} />
-    ),
+    accessorKey: "comcommittee", // or "comcommittee" if not transformed
+    header: "اللجنة",
+    cell: ({ row }) => <div>{row.getValue("comcommittee")}</div>, // or "comcommittee"
   },
   {
-    accessorKey: "start_date",
-    header: "Project timeline",
+    accessorKey: "department",
+    header: "القسم",
+    cell: ({ row }) => <div>{row.getValue("department")}</div>,
+  },
+  {
+    accessorKey: "unit",
+    header: "الوحدة",
+    cell: ({ row }) => <div>{row.getValue("unit")}</div>,
+  },
+  {
+    accessorKey: "qrCode",
+    header: "QR Code",
     cell: ({ row }) => (
-      <ProjectTimeLine
-        startDate={row.original.start_date}
-        endDate={row.original.end_date}
+      <img
+        src={row.getValue("qrCode")}
+        alt="QR Code"
+        className="w-16 h-16 object-cover"
       />
     ),
   },
   {
-    accessorKey: "estimated_cost",
-    header: ({ column }) => (
-      <SortableHeader column={column} title="Estimated cost" />
-    ),
-    cell: ({ row }) => (
-      <p className="text-base">
-        {formatCurrency(row.getValue("estimated_cost"))}
-      </p>
-    ),
-    enableSorting: true,
-  },
-  {
     accessorKey: "actions",
-    header: "Actions",
-    cell: ({ row }) => <ProjectActions row={row} />,
+    header: "الإجراءات",
+    cell: ({ row }) => (
+      <div className="flex gap-2">
+        <button className="btn btn-primary">Edit</button>
+        <button className="btn btn-danger">Delete</button>
+      </div>
+    ),
   },
 ];
+

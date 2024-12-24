@@ -1,15 +1,35 @@
 import { DataTable } from "@/components/tanStackDataTable";
-import { columns } from "@/components/tanStackDataTable/columns";
+import { columns, Employee } from "@/components/tanStackDataTable/columns";
 import { projects } from "@/components/tanStackDataTable/data";
+import { getAllUsers } from "@/lib/data";
 
 
 
 
-const IndexPage = () => {
+
+
+const IndexPage = async () => {
+
+  const employees = await getAllUsers();
+
+  console.log("users",employees);
+
+
+  const transformedEmployees = employees.map((employee) => ({
+    ...employee,
+    employeeHireDate: employee.employeeHireDate.toISOString(), // Convert Date to ISO string
+    department: employee.department.toString(), // Ensure department is string
+    unit: employee.unit.toString(), // Ensure unit is string
+  }));
+  
+
+  
+
   return (
     <div className="flex flex-col w-full gap-10">
       {/* <TopHeader /> */}
-      <DataTable data={projects} columns={columns} />
+      <DataTable data={transformedEmployees} columns={columns} />
+
     </div>
   );
 };

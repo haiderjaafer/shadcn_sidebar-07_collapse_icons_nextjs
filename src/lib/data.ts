@@ -2,9 +2,8 @@ import prisma  from "@/utiles/db";
 
 const ITEMS_PER_PAGE = 5;
 
+
 export const getAllEmployees = async (empNo: string, currentPage: number) => {
-
-
 
 console.log("query,,,, currentPage",  empNo, currentPage);
 
@@ -43,11 +42,6 @@ console.log("query,,,, currentPage",  empNo, currentPage);
       },
     });
 
-
- 
-
-   
-
     console.log("employees",employees);
 
     return employees;
@@ -55,6 +49,41 @@ console.log("query,,,, currentPage",  empNo, currentPage);
     throw new Error("Failed to fetch users data");
   }
 };
+
+
+
+
+
+export const getAllUsers = async () => {
+
+
+  console.log("getAllUsers" ,getAllUsers);
+
+  
+    try {
+  
+      const employees = await prisma.users.findMany({
+  
+  
+  
+  
+      });
+  
+      console.log("employees",employees);
+  
+      return employees;
+    } catch (error) {
+      throw new Error("Failed to fetch users data");
+    }
+  };
+  
+
+
+
+
+
+
+
 
 export const getUsersPages = async (query: string) => {
   try {
