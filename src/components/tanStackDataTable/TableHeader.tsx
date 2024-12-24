@@ -9,14 +9,14 @@ import { Table } from "@tanstack/react-table";
 
 const TableHeader = <TData, _>({ table }: { table: Table<TData> }) => {
   return (
-    <ShadTableHeader className="bg-table-headerBackground">
+    <ShadTableHeader className="bg-table-headerBackground ">
       {table.getHeaderGroups().map((headerGroup) => (
         <TableRow key={headerGroup.id}>
           {headerGroup.headers.map((header) => {
             return (
               <TableHead
                 key={header.id}
-                className="h-[34px] font-normal uppercase text-xs text-gray-500"
+                className="h-[40px] font-normal uppercase text-lg text-right text-gray-900  "
               >
                 {header.isPlaceholder
                   ? null

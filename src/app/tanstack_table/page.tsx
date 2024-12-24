@@ -9,11 +9,9 @@ import { getAllUsers } from "@/lib/data";
 
 
 const IndexPage = async () => {
-
   const employees = await getAllUsers();
 
-  console.log("users",employees);
-
+  console.log("users", employees);
 
   const transformedEmployees = employees.map((employee) => ({
     ...employee,
@@ -21,15 +19,10 @@ const IndexPage = async () => {
     department: employee.department.toString(), // Ensure department is string
     unit: employee.unit.toString(), // Ensure unit is string
   }));
-  
-
-  
 
   return (
-    <div className="flex flex-col w-full gap-10">
-      {/* <TopHeader /> */}
-      <DataTable data={transformedEmployees} columns={columns} />
-
+    <div className="flex flex-col w-full gap-10 ">
+      <DataTable<Employee, unknown> data={transformedEmployees} columns={columns} />
     </div>
   );
 };

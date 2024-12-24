@@ -31,6 +31,7 @@ export function SortableHeader<TData, TValue>({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
+        
             variant="ghost"
             size="sm"
             className={cn(
@@ -38,10 +39,11 @@ export function SortableHeader<TData, TValue>({
               column.getIsSorted() && "bg-primary/10"
             )}
           >
-            <span className="font-extrabold text-lg text-black">{title}</span>
+            <span  className="font-extrabold text-lg text-black">{title}</span>
             {column.getIsSorted() === "desc" && <ArrowDown />}
             {column.getIsSorted() === "asc" && <ArrowUp />}
             {!column.getIsSorted() && <ChevronsUpDown className="h-1 w-1" />}
+            
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
