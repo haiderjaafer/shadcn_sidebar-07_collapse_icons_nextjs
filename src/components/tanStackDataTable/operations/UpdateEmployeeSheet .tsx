@@ -39,6 +39,7 @@ export function UpdateEmployeeSheet({ employee, ...props }: UpdateEmployeeSheetP
     resolver: zodResolver(updateEmployeeSchema),
     defaultValues: {
       userName: employee?.userName ?? "",
+      committee: employee.comcommittee??"",
       empNo: employee?.empNo ?? "",
       department: employee?.department ?? "",
       unit: employee?.unit ?? "",
@@ -48,6 +49,7 @@ export function UpdateEmployeeSheet({ employee, ...props }: UpdateEmployeeSheetP
   React.useEffect(() => {
     form.reset({
       userName: employee?.userName ?? "",
+      committee: employee.comcommittee??"",
       empNo: employee?.empNo ?? "",
       department: employee?.department ?? "",
       unit: employee?.unit ?? "",
@@ -104,6 +106,21 @@ export function UpdateEmployeeSheet({ employee, ...props }: UpdateEmployeeSheetP
                   <FormLabel>Employee Number</FormLabel>
                   <FormControl>
                     <Textarea placeholder="Enter employee number" className="resize-none" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+               {/* committee */}
+               <FormField
+              control={form.control}
+              name="committee"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>committee</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Enter department" className="resize-none" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

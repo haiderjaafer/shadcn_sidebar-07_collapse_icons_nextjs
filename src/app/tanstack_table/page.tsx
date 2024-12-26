@@ -1,30 +1,42 @@
-import { DataTable } from "@/components/tanStackDataTable";
-import { columns, Employee } from "@/components/tanStackDataTable/columns";
-import { projects } from "@/components/tanStackDataTable/data";
-import { getAllUsers } from "@/lib/data";
+import { TableSkeleton } from "@/components/EmployeeTable/TableSkeleton";
+import UsersTanstackTableServer from "@/components/tanStackDataTable/tanstack_TableServer";
+import { Suspense } from "react";
 
 
 
 
+const UsersTableDataAppRoute = async ({
+  searchParams,
+}: {
+  searchParams?: {
+    
+    empNo?: string;
+  };
+}) => {
+  // Await searchParams before using its properties
+  const empNo = searchParams?.empNo || "";
 
 
-const IndexPage = async () => {
-  const employees = await getAllUsers();
 
-  console.log("users", employees);
 
-  const transformedEmployees = employees.map((employee) => ({
-    ...employee,
-    employeeHireDate: employee.employeeHireDate.toISOString(), // Convert Date to ISO string
-    department: employee.department.toString(), // Ensure department is string
-    unit: employee.unit.toString(), // Ensure unit is string
-  }));
+    return (
+      <div className="max-w-screen-2xl mx-auto mt-5  ">
+   
+        
+        <Suspense  fallback={<TableSkeleton />}>
+          <UsersTanstackTableServer
+          
+            empNo={empNo}
+           
+             />
+        </Suspense>
 
-  return (
-    <div className="flex flex-col w-full gap-10 ">
-      <DataTable<Employee, unknown> data={transformedEmployees} columns={columns} />
-    </div>
-  );
-};
 
-export default IndexPage;
+
+     
+      
+      </div>
+    );
+  };
+
+  export default UsersTableDataAppRoute;

@@ -8,6 +8,7 @@ import { getUsersPages } from "@/lib/data";
 import { Suspense } from "react";
 
 
+
 const EmployeeTable = async ({
   searchParams,
 }: {
@@ -35,10 +36,12 @@ console.log("totalPages",totalPages);
         <Suspense  fallback={<TableSkeleton />}>
           <EmployeesTableServer
           
-          empNo={empNo}
+            empNo={empNo}
             currentPage={currentPage}
              />
         </Suspense>
+
+
 
         <div className="flex justify-center mt-4">
         <Pagination totalPages={totalPages} />

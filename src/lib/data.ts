@@ -54,7 +54,7 @@ console.log("query,,,, currentPage",  empNo, currentPage);
 
 
 
-export const getAllUsers = async () => {
+export const getAllUsers = async (empNo: string) => {
 
 
   console.log("getAllUsers" ,getAllUsers);
@@ -64,7 +64,19 @@ export const getAllUsers = async () => {
   
       const employees = await prisma.users.findMany({
   
-  
+        where: {
+          OR: [
+            {
+              empNo: {
+                contains: empNo,
+                
+                //mode: "insensitive", 
+                 
+              },
+            },
+
+          ]
+        } 
   
   
       });

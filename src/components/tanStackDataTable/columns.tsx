@@ -15,6 +15,7 @@ import ProjectTimeLine from "./ProjectTimeLine";
 import { ProjectActions } from "./ProjectActions";
 import { format } from "date-fns";
 import { Ellipsis } from "lucide-react";
+import { Button } from "../ui/button";
 
 
 export interface Employee {
@@ -71,17 +72,38 @@ export const columns: ColumnDef<Employee>[] = [
   // },
   {
     accessorKey: "userName",
+    // header: ({ column }) => (
+    //   <SortableHeader column={column} title="اسم المستخدم" className="font-extrabold text-center "  />
+    // ),
+
     header: ({ column }) => (
-      <SortableHeader column={column} title="اسم المستخدم" className="font-extrabold text-center "  />
+      <Button
+        variant="ghost"
+        onClick={() => handleHeaderClick(column.id)}
+        className="text-left hover:text-blue-500"
+      >
+        <SortableHeader column={column} title="اسم المستخدم" className="font-extrabold text-center "  />
+      </Button>
     ),
     cell: ({ row }) => <div>{row.getValue("userName")}</div>,
     enableSorting: false,
   },
   {
     accessorKey: "empNo",
+    // header: ({ column }) => (
+    //   <SortableHeader column={column} title="رقم الموظف" className="font-extrabold text-center " />
+    // ),
+
     header: ({ column }) => (
-      <SortableHeader column={column} title="رقم الموظف" className="font-extrabold text-center " />
+      <Button
+        variant="ghost"
+        onClick={() => handleHeaderClick(column.id)}
+        className="text-left hover:text-blue-500"
+      >
+        <SortableHeader column={column} title="رقم الموظف" className="font-extrabold text-center "  />
+      </Button>
     ),
+
     cell: ({ row }) => <div>{row.getValue("empNo")}</div>,
     enableSorting: false,
   },
@@ -196,9 +218,20 @@ const handleUpdate = (employee: Employee ) => {
 //    type: "update",
     
     if (confirm(`Are you sure you want to update ${employee.userName}?`)) {
-      // Perform delete operation here
+      // Perform updating operation here
       console.log("updating employee:", employee);
     }
 
   //});
 };
+
+
+
+const handleHeaderClick = (columnId: string) => {
+ 
+  // if (confirm(`Are you sure you want to update field ${columnId}?`)) {
+  //   // Perform pass operation here
+  //   console.log("updating employee:", columnId);
+  // }
+};
+

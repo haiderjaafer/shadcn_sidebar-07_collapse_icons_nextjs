@@ -14,12 +14,16 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import Image from "next/image";
 //import TableTabs from "./Tabs";
-import TableHeader from "./TableHeader";
+// import TableHeader from "./TableHeader";
 import { Employee } from "./columns";
 import ShowQrCodeDialog from "./operations/ShowQrCodeDialog";
 import { UpdateEmployeeSheet } from "./operations/UpdateEmployeeSheet ";
 import { Ellipsis } from "lucide-react";
 //import { TableFooter } from "./Footer";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "../ui/button";
+import TableHeader from "./table_header";
+import Search from "../EmployeeTable/SearchQueryParams";
 
 
 export interface DataTableProps<TData, TValue> {
@@ -36,6 +40,27 @@ export function DataTable<TData, TValue>({
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [rowAction, setRowAction] = useState<{ type: string; row: Employee } | null>(null);
   const [isQrDialogOpen, setIsQrDialogOpen] = useState(false);
+
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [activeColumn, setActiveColumn] = useState<string | null>(null);
+
+  const handleHeaderClick = (columnId: string) => {
+    if (columnId === "userName") {
+      // Only allow searching for the 'userName' column
+      if (confirm(`Are you sure you want to search on the column: ${columnId}?`)) {
+        setActiveColumn(columnId); // Set the active column
+        setDialogOpen(true); // Open the dialog
+      }
+    } if (columnId === "empNo") {
+      // Alert for other columns
+      alert(`Are you sure you want to search on the column: ${columnId}`);
+      setActiveColumn(columnId); // Set the active column
+      setDialogOpen(true); // Open the dialog
+    }
+  };
+  
+  
 
   const table = useReactTable({
     data,
@@ -66,6 +91,8 @@ export function DataTable<TData, TValue>({
       type: "update",
       row: employee,
     });
+
+    console.log("employee",employee);
   };
 
 
@@ -80,15 +107,22 @@ export function DataTable<TData, TValue>({
     <div className="flex flex-col my-10" dir="rtl">
       <div className="rounded-md border relative">
         <Table >
-          <TableHeader table={table} />
+
+        <TableHeader table={table} onHeaderClick={handleHeaderClick} />
+
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows.map((row,index) => (
                 <TableRow
                   key={row.id}
+                 
+                className={`block border-b border-gray-700 lg:table-row ${
+                  index % 2 === 0 ? "bg-gray-500" : "bg-gray-600"
+                }`}
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => {
+                    
                     const employee = row.original as Employee; // Assert type
 
                     // Custom rendering for QR code column
@@ -101,7 +135,7 @@ export function DataTable<TData, TValue>({
                               alt={`${employee.userName} QR Code`}
                               width={50}
                               height={50}
-                              className="mt-2 mx-auto my-auto cursor-pointer"
+                              className="mt-2 mx-auto my-auto cursor-pointer "
                               onClick={() => {
                                 setSelectedEmployee(employee);
                                 setIsQrDialogOpen(true);
@@ -152,6 +186,7 @@ export function DataTable<TData, TValue>({
                       </TableCell>
                     );
                   })}
+                  
                 </TableRow>
               ))
             ) : (
@@ -186,7 +221,27 @@ export function DataTable<TData, TValue>({
         />
       )}
         </div>
+
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Search {activeColumn}</DialogTitle>
+          </DialogHeader>
+          <div>
+            <Search/>
+            {/* Placeholder: Add search functionality here */}
+            Search or filter data for the column: {activeColumn}
+          </div>
+        </DialogContent>
+      </Dialog>
       </div>
     </div>
   );
 }
+
+
+
+
+
+
+

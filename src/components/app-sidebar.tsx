@@ -94,8 +94,8 @@ const data = {
           url: "/employees",
         },
         {
-          title: "Explorer",
-          url: "#",
+          title: "tanstack Table",
+          url: "/tanstack_table",
         },
         {
           title: "Quantum",
