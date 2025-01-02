@@ -32,8 +32,7 @@ import { Button } from "../ui/button";
 
 
     return(
-
-      <thead>
+      <thead className="bg-black ">
       {table.getHeaderGroups().map((headerGroup) => (
         <tr key={headerGroup.id}>
           {headerGroup.headers.map((header) => (
@@ -63,6 +62,7 @@ import { Button } from "../ui/button";
         </tr>
       ))}
     </thead>
+    
   )};
   
   export default  TableHeader;

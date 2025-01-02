@@ -24,6 +24,7 @@ import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from 
 import { Button } from "../ui/button";
 import TableHeader from "./table_header";
 import Search from "../EmployeeTable/SearchQueryParams";
+import { format } from "date-fns";
 
 
 export interface DataTableProps<TData, TValue> {
@@ -104,102 +105,179 @@ export function DataTable<TData, TValue>({
 
 
   return (
-    <div className="flex flex-col my-10" dir="rtl">
+
+
+  
+<div className="flex flex-col my-10" dir="rtl">
       <div className="rounded-md border relative">
+        {/* Table for larger screens */}
+        <div className="hidden lg:block">
+
+
         <Table >
 
-        <TableHeader table={table} onHeaderClick={handleHeaderClick} />
+<TableHeader table={table} onHeaderClick={handleHeaderClick} />
 
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row,index) => (
-                <TableRow
-                  key={row.id}
-                 
-                className={`block border-b border-gray-700 lg:table-row ${
-                  index % 2 === 0 ? "bg-gray-500" : "bg-gray-600"
-                }`}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => {
-                    
-                    const employee = row.original as Employee; // Assert type
+  <TableBody>
+    {table.getRowModel().rows?.length ? (
+      table.getRowModel().rows.map((row,index) => (
+        <TableRow
+          key={row.id}
+         
+        className={`block border-b border-gray-700 lg:table-row ${
+          index % 2 === 0 ? "bg-gray-500" : "bg-gray-600"
+        }`}
+          data-state={row.getIsSelected() && "selected"}
+        >
+          {row.getVisibleCells().map((cell) => {
+            
+            const employee = row.original as Employee; // Assert type
 
-                    // Custom rendering for QR code column
-                    if (cell.column.id === "qrCode") {
-                      return (
-                        <TableCell key={cell.id}>
-                          {employee.qrCode ? (
-                            <Image
-                              src={employee.qrCode}
-                              alt={`${employee.userName} QR Code`}
-                              width={50}
-                              height={50}
-                              className="mt-2 mx-auto my-auto cursor-pointer "
-                              onClick={() => {
-                                setSelectedEmployee(employee);
-                                setIsQrDialogOpen(true);
-                              }}
-                            />
-                          ) : (
-                            <span className="text-gray-500">No QR Code</span>
-                          )}
-                        </TableCell>
-                      );
-                    }
-
-                    if (cell.column.id === "actions") {
-                      return (
-                        <TableCell key={cell.id}>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <button>
-                                <Ellipsis className="h-6 w-6 text-gray-500 hover:text-gray-900" />
-                              </button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                              align="end"
-                              className="bg-gray-900 text-white"
-                            >
-                              <DropdownMenuItem
-                                onClick={() => handleUpdate(employee)}
-                                className="cursor-pointer"
-                              >
-                                Edit
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => alert("Delete clicked")}
-                                className="cursor-pointer text-red-500"
-                              >
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      );
-                    }
-
-                    // Render all other cells as usual
-                    return (
-                      <TableCell className="text-center" key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    );
-                  })}
-                  
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+            // Custom rendering for QR code column
+            if (cell.column.id === "qrCode") {
+              return (
+                <TableCell key={cell.id}>
+                  {employee.qrCode ? (
+                    <Image
+                      src={employee.qrCode}
+                      alt={`${employee.userName} QR Code`}
+                      width={50}
+                      height={50}
+                      className="mt-2 mx-auto my-auto cursor-pointer "
+                      onClick={() => {
+                        setSelectedEmployee(employee);
+                        setIsQrDialogOpen(true);
+                      }}
+                    />
+                  ) : (
+                    <span className="text-gray-500">No QR Code</span>
+                  )}
                 </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              );
+            }
 
-        {selectedEmployee && (
+            if (cell.column.id === "actions") {
+              return (
+                <TableCell key={cell.id}>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button>
+                        <Ellipsis className="h-6 w-6 text-white hover:text-gray-900" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="end"
+                      className="bg-gray-900 text-white"
+                    >
+                      <DropdownMenuItem
+                        onClick={() => handleUpdate(employee)}
+                        className="cursor-pointer"
+                      >
+                        Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => alert("Delete clicked")}
+                        className="cursor-pointer text-red-500"
+                      >
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              );
+            }
+
+            // Render all other cells as usual
+            return (
+              <TableCell className="text-center" key={cell.id}>
+                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </TableCell>
+            );
+          })}
+          
+        </TableRow>
+      ))
+    ) : (
+      <TableRow>
+        <TableCell colSpan={columns.length} className="h-24 text-center">
+          No results.
+        </TableCell>
+      </TableRow>
+    )}
+  </TableBody>
+</Table>
+
+
+        </div>
+
+        {/* Vertical layout for smaller screens */}
+        <div className="block lg:hidden">
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row, index) => {
+              const employee = row.original as Employee;
+              return (
+                <div
+                  key={row.id}
+                  className={`p-4 border rounded-lg mb-4 ${
+                    index % 2 === 0 ? "bg-gray-500" : "bg-gray-600"
+                  }`}
+                >
+                  {/* Display only relevant fields */}
+                  <div className="flex flex-col gap-2">
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-gray-300">اسم الموظف :</span>
+                      <span className="text-gray-100">{employee.userName}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-gray-300">رقم الحاسبة :</span>
+                      <span className="text-gray-100">{employee.empNo}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-gray-300">تاريخ التعيين :</span>   
+                      <span className="text-gray-100">{format(new Date(employee.employeeHireDate), "yyyy-MM-dd")}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-gray-300">الهيأة:</span>
+                      <span className="text-gray-100">{employee.comcommittee}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-gray-300">القسم:</span>
+                      <span className="text-gray-100">{employee.department}</span>
+                    </div>
+
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-gray-300">الشعبة:</span>
+                      <span className="text-gray-100">{employee.unit}</span>
+                    </div>
+
+                  
+                  </div>
+
+                  {/* Display QR Code (only one per row) */}
+                  {employee.qrCode && (
+                    <div className="flex justify-center mt-4">
+                      <Image
+                        src={employee.qrCode}
+                        alt={`${employee.userName} QR Code`}
+                        width={50}
+                        height={50}
+                        className="cursor-pointer"
+                        onClick={() => {
+                          setSelectedEmployee(employee);
+                          setIsQrDialogOpen(true);
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          ) : (
+            <div className="h-24 text-center">No results.</div>
+          )}
+        </div>
+      </div>
+      {selectedEmployee && (
           <ShowQrCodeDialog
             open={isQrDialogOpen}
             onOpenChange={(isOpen: boolean) => {
@@ -235,7 +313,13 @@ export function DataTable<TData, TValue>({
         </DialogContent>
       </Dialog>
       </div>
-    </div>
+   
+    
+
+  
+
+
+  
   );
 }
 

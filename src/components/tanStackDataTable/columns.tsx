@@ -82,7 +82,7 @@ export const columns: ColumnDef<Employee>[] = [
         onClick={() => handleHeaderClick(column.id)}
         className="text-left hover:text-blue-500"
       >
-        <SortableHeader column={column} title="اسم المستخدم" className="font-extrabold text-center "  />
+        <SortableHeader column={column} title="اسم المستخدم" className="font-extrabold text-center text-white text-xl "  />
       </Button>
     ),
     cell: ({ row }) => <div>{row.getValue("userName")}</div>,
