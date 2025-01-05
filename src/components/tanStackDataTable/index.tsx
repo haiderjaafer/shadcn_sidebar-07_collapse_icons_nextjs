@@ -123,6 +123,9 @@ export function DataTable<TData, TValue>({
       table.getRowModel().rows.map((row,index) => (
         <TableRow
           key={row.id}
+
+       
+       
          
         className={`block border-b border-gray-700 lg:table-row ${
           index % 2 === 0 ? "bg-gray-500" : "bg-gray-600"
@@ -167,13 +170,16 @@ export function DataTable<TData, TValue>({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
                       align="end"
-                      className="bg-gray-900 text-white"
+                      className="bg-gray-900 text-white "
                     >
                       <DropdownMenuItem
                         onClick={() => handleUpdate(employee)}
-                        className="cursor-pointer"
+                        className="cursor-pointer text-lg "
                       >
-                        Edit
+                        <div className="flex items-center m-auto   ">
+                          <div className="">تعديل</div>
+                          <div>icon</div>
+                        </div>
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => alert("Delete clicked")}

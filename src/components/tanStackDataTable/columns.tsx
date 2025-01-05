@@ -80,9 +80,9 @@ export const columns: ColumnDef<Employee>[] = [
       <Button
         variant="ghost"
         onClick={() => handleHeaderClick(column.id)}
-        className="text-left hover:text-blue-500"
+        className="text-left hover:text-blue-500 hover:bg-black "
       >
-        <SortableHeader column={column} title="اسم المستخدم" className="font-extrabold text-center text-white text-xl "  />
+        <SortableHeader column={column} title="اسم المستخدم" className="font-extrabold text-center text-white  text-xl "  />
       </Button>
     ),
     cell: ({ row }) => <div>{row.getValue("userName")}</div>,
@@ -98,19 +98,31 @@ export const columns: ColumnDef<Employee>[] = [
       <Button
         variant="ghost"
         onClick={() => handleHeaderClick(column.id)}
-        className="text-left hover:text-blue-500"
+        className="text-left hover:bg-black"
       >
-        <SortableHeader column={column} title="رقم الموظف" className="font-extrabold text-center "  />
+        <SortableHeader column={column} title="رقم الموظف" className="font-extrabold text-center text-lg text-white "  />
       </Button>
     ),
 
     cell: ({ row }) => <div>{row.getValue("empNo")}</div>,
     enableSorting: false,
   },
+
+  
+
+
   {
     accessorKey: "employeeHireDate",
     header: ({ column }) => (
-      <SortableHeader column={column} title="تاريخ التعيين"  className="font-extrabold text-center "/>
+      
+      <Button
+      asChild
+      variant="ghost"
+      onClick={() => handleHeaderClick(column.id)}
+      className="text-left hover:bg-black "
+    >
+      <SortableHeader column={column} title="تاريخ التعيين"  className="font-extrabold text-center  "/>
+    </Button>
     ),
     cell: ({ row }) => (
       <div>
@@ -121,30 +133,41 @@ export const columns: ColumnDef<Employee>[] = [
     ),
     enableSorting: true,
   },
+
+
+
   {
     accessorKey: "comcommittee", // or "comcommittee" if not transformed
 
 
      header: ({ column }) => (
-      <SortableHeader column={column} title="الهيأة"  className="font-extrabold text-center "/>
+      <SortableHeader column={column} title="الهيأة"  className="font-extrabold text-center text-lg hover:bg-black text-white "/>
     ),
     cell: ({ row }) => <div>{row.getValue("comcommittee")}</div>, // or "comcommittee"
     enableSorting:false
   },
+
+
+
+
+
   {
     accessorKey: "department",
 
       header: ({ column }) => (
-      <SortableHeader column={column} title="القسم"  className="font-extrabold text-center "/>
+      <SortableHeader column={column} title="القسم"  className="font-extrabold text-center text-lg hover:bg-black text-white "/>
     ),
     cell: ({ row }) => <div>{row.getValue("department")}</div>,
     enableSorting:false
   },
 
+
+
+
   {
     accessorKey: "unit",
     header: ({ column }) => (
-      <SortableHeader column={column} title="الوحدة"  className="font-extrabold text-center "/>
+      <SortableHeader column={column} title="الوحدة"  className="font-extrabold text-center text-lg hover:bg-black text-white "/>
     ),
     cell: ({ row }) => <div>{row.getValue("unit")}</div>,
     enableSorting:false
@@ -152,7 +175,7 @@ export const columns: ColumnDef<Employee>[] = [
   {
     accessorKey: "qrCode",
     header: ({ column }) => (
-      <SortableHeader column={column} title="رمز الاستجابة"  className="font-extrabold text-center "/>
+      <SortableHeader column={column} title="رمز الاستجابة"  className="font-extrabold text-center text-lg hover:bg-black text-white "/>
        
     ),
     cell: ({ row }) => (
@@ -167,7 +190,7 @@ export const columns: ColumnDef<Employee>[] = [
   {
     id: "actions",
     header: ({ column }) => (
-      <SortableHeader column={column} title="الاعمال"  className="font-extrabold text-center "/>
+      <SortableHeader column={column} title="الاعمال"  className="font-extrabold text-center text-lg hover:bg-black text-white "/>
      
     ),
     enableSorting:false,

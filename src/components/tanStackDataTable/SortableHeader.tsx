@@ -35,11 +35,11 @@ export function SortableHeader<TData, TValue>({
             variant="ghost"
             size="sm"
             className={cn(
-              "-ml-3 h-full data-[state=open]:bg-primary/10 uppercase text-xs",
+              "-ml-3 h-full data-[state=open]:bg-primary/10 uppercase text-lg",
               column.getIsSorted() && "bg-primary/10"
             )}
           >
-            <span  className="font-extrabold text-lg text-black">{title}</span>
+            <span  className="font-extrabold text-lg hover:text-black">{title}</span>
             {column.getIsSorted() === "desc" && <ArrowDown />}
             {column.getIsSorted() === "asc" && <ArrowUp />}
             {!column.getIsSorted() && <ChevronsUpDown className="h-1 w-1" />}

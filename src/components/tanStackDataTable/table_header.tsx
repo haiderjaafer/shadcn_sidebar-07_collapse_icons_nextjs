@@ -36,18 +36,20 @@ import { Button } from "../ui/button";
       {table.getHeaderGroups().map((headerGroup) => (
         <tr key={headerGroup.id}>
           {headerGroup.headers.map((header) => (
-            <th key={header.id} className="p-2 text-sm font-bold text-gray-500">
+            <th key={header.id} className="p-2 text-sm font-bold text-gray-500 ">
               {header.isPlaceholder ? null : (
                 <Button
                   asChild
+                  
                   variant="ghost"
-                  className="text-left hover:text-blue-500"
+                  className="text-left hover:text-white bg-black"
                   onClick={() => {
                     if (onHeaderClick) {
                       onHeaderClick(header.column.id);
                     }
                   }}
                 >
+                  
                   {typeof header.column.columnDef.header === "function"
                     ? header.column.columnDef.header({
                         column: header.column,
