@@ -16,7 +16,8 @@
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["typedSql"]
+  previewFeatures = ["typedSql","views"]
+  
 
 }
 
@@ -86,6 +87,91 @@ userID         Int
 userUrl        Users     @relation(fields: [userID], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
 }
+
+
+model EmployeeModel {
+  id    Int    @id @default(autoincrement())
+  EMP_NO String @unique
+  namefull_emp_name  String
+  YEAR_NO   String
+  MONTH_NO   String
+  CIVIL_NO   String
+  ACTIVE   String
+  cal_centre_code   String
+  INCRDIF    String
+  CALSAL   String
+  PAIDSAL   String
+  sgrade   String
+  GradeStep   String
+  GRSDED   String
+  LSTRND   String
+  NXTRND   String
+  GRSALW   String
+  abs_days   String
+  JobGrade   String
+  CERT_NM   String
+  JOB_NM   String
+  ORGSAL   String?
+  POST_NM   String?
+  deductionModel DeductionModel[]
+
+
+}
+
+
+model DeductionModel{
+  id    Int    @id @default(autoincrement())
+  EMP_NO String 
+  DED_NO   String
+  DEDCAL   String
+  deddifcal   String
+  DEDBAL   String
+  dedprevdifcal   String
+  deductionModelRelation EmployeeModel @relation(fields: [EMP_NO], references: [EMP_NO], onDelete: Cascade)
+}
+
+
+
+// view EmployeeView {
+//   id    Int    @id @default(autoincrement())
+//   EMP_NO String
+//   namefull_emp_name  String
+//   YEAR_NO   String
+//   MONTH_NO   String
+//   CIVIL_NO   String
+//   ACTIVE   String
+//   cal_centre_code   String
+//   INCRDIF    String
+//   CALSAL   String
+//   PAIDSAL   String
+//   sgrade   String
+//   GradeStep   String
+//   GRSDED   String
+//   LSTRND   String
+//   NXTRND   String
+//   GRSALW   String
+//   abs_days   String
+//   JobGrade   String
+//   CERT_NM   String
+//   JOB_NM   String
+//   ORGSAL   String
+//   POST_NM   String
+//   DED_NO   String
+//   DEDCAL   String
+//   deddifcal   String
+//   DEDBAL   String
+//   dedprevdifcal   String
+  
+
+// }
+
+
+
+
+
+
+
+
 
 
 
