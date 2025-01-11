@@ -75,7 +75,11 @@ model Users {
   unit           Int
   userUnit       unit     @relation(fields: [unit], references: [un], onDelete: NoAction, onUpdate: NoAction)
   updfUrlsModel  updfUrlsModel[]
-  qrCode         String   @db.VarChar(max) 
+  qrCode         String   @db.VarChar(max)
+  EmployeeModel  EmployeeModel[]
+
+  
+  
 }
 
 
@@ -89,6 +93,8 @@ userUrl        Users     @relation(fields: [userID], references: [id], onDelete:
 }
 
 
+
+ 
 model EmployeeModel {
   id    Int    @id @default(autoincrement())
   EMP_NO String @unique
@@ -110,23 +116,25 @@ model EmployeeModel {
   abs_days   String
   JobGrade   String
   CERT_NM   String
-  JOB_NM   String
+  JOB_NM   String?
   ORGSAL   String?
   POST_NM   String?
   deductionModel DeductionModel[]
-
-
+  userRelation      Users? @relation(fields: [EMP_NO], references: [empNo]) // Explicitly named relation
+ 
 }
+
+
 
 
 model DeductionModel{
   id    Int    @id @default(autoincrement())
   EMP_NO String 
-  DED_NO   String
-  DEDCAL   String
-  deddifcal   String
-  DEDBAL   String
-  dedprevdifcal   String
+  DED_NO   String?
+  DEDCAL   String?
+  deddifcal   String?
+  DEDBAL   String?
+  dedprevdifcal   String?
   deductionModelRelation EmployeeModel @relation(fields: [EMP_NO], references: [EMP_NO], onDelete: Cascade)
 }
 

@@ -1,0 +1,22 @@
+BEGIN TRY
+
+BEGIN TRAN;
+
+-- DropIndex
+ALTER TABLE [dbo].[Users] DROP CONSTRAINT [Users_empNo_key];
+
+-- AddForeignKey
+ALTER TABLE [dbo].[Users] ADD CONSTRAINT [Users_empNo_fkey] FOREIGN KEY ([empNo]) REFERENCES [dbo].[EmployeeModel]([EMP_NO]) ON DELETE CASCADE ON UPDATE CASCADE;
+
+COMMIT TRAN;
+
+END TRY
+BEGIN CATCH
+
+IF @@TRANCOUNT > 0
+BEGIN
+    ROLLBACK TRAN;
+END;
+THROW
+
+END CATCH

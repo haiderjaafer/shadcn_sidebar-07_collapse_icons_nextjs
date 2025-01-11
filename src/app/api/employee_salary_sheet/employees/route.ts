@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from '@/utiles/db';
-import axios from "axios";
 
 
-//http://localhost:3000/api/employee_salary_sheet
-export async function GET(req: NextRequest, res: NextResponse) {
+
+//http://localhost:3000/api/employee_salary_sheet/employees?empNo=008049
+
+export async function GET(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
-    const empNo = searchParams.get('EMP_NO');
+  const empNo = searchParams.get('empNo');
+
+  console.log("emp",empNo);
 
 
     if (!empNo) {
@@ -21,10 +24,22 @@ export async function GET(req: NextRequest, res: NextResponse) {
 
 
 const employee = await prisma.employeeModel.findUnique({
-      where: { EMP_NO: "008049" },
+      where: { EMP_NO: empNo },
       include: {
         deductionModel: true, // Include related deductions
+        
+        userRelation: {
+          select: {
+            userName: true,
+            qrCode: true,
+          },
+        },
+        
+        
+        
       },
+      
+      
     });
 
     if (!employee) {
@@ -34,7 +49,15 @@ const employee = await prisma.employeeModel.findUnique({
       );
     }
 
-    return NextResponse.json(employee, { status: 200 });
+   // Add qrCode directly to the employee object
+const employeeWithQRCode = {
+  ...employee,
+  QRCode: employee.userRelation?.qrCode || null, // Assign qrCode or null if it doesn't exist
+  deductions: employee.deductionModel || [], // Include deductionModel as deductions array
+
+};
+
+return NextResponse.json(employeeWithQRCode, { status: 200 });
         
         
       

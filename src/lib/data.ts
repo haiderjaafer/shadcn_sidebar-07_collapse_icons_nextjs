@@ -57,7 +57,7 @@ console.log("query,,,, currentPage",  empNo, currentPage);
 export const getAllUsers = async (empNo: string) => {
 
 
-  console.log("getAllUsers" ,getAllUsers);
+ // console.log("getAllUsers" ,getAllUsers);
 
   
     try {

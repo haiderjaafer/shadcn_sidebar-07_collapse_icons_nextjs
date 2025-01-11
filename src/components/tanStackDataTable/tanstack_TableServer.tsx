@@ -1,3 +1,4 @@
+import { EmployeeSalarySheetData, getEmployeeByEmpNo } from "@/apiCallFunctions/EmployeeByEmpNo";
 import { DataTable } from "@/components/tanStackDataTable";
 import { columns, Employee } from "@/components/tanStackDataTable/columns";
 import { projects } from "@/components/tanStackDataTable/data";
@@ -17,7 +18,11 @@ const UsersTanstackTableServer = async ({
 }: EmployeesTableServerProps) => {
   const employees = await getAllUsers(empNo);
 
-  console.log("users", employees);
+ 
+
+  const employeebyEmpNo = await getEmployeeByEmpNo("008049");
+
+  console.log( "employeebyEmpNo",employeebyEmpNo);
 
   const transformedEmployees = employees.map((employee) => ({
     ...employee,
@@ -28,7 +33,7 @@ const UsersTanstackTableServer = async ({
 
   return (
     <div className="flex flex-col w-full gap-10 ">
-      <DataTable<Employee, unknown> data={transformedEmployees} columns={columns} />
+      <DataTable<EmployeeSalarySheetData, unknown> data={[employeebyEmpNo]} columns={columns} />
     </div>
   );
 };

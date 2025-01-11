@@ -25,6 +25,8 @@ import { Button } from "../ui/button";
 import TableHeader from "./table_header";
 import Search from "../EmployeeTable/SearchQueryParams";
 import { format } from "date-fns";
+import { EmployeeSalarySheetData } from "@/apiCallFunctions/EmployeeByEmpNo";
+import { getActiveStatusDescription } from "./getActiveStatusDescription";
 
 
 export interface DataTableProps<TData, TValue> {
@@ -38,8 +40,8 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
-  const [rowAction, setRowAction] = useState<{ type: string; row: Employee } | null>(null);
+  const [selectedEmployee, setSelectedEmployee] = useState<EmployeeSalarySheetData | null>(null);
+  const [rowAction, setRowAction] = useState<{ type: string; row: EmployeeSalarySheetData } | null>(null);
   const [isQrDialogOpen, setIsQrDialogOpen] = useState(false);
 
 
@@ -86,7 +88,7 @@ export function DataTable<TData, TValue>({
   console.log("sorting", table.getState().sorting);
 
   
-  const handleUpdate = (employee: Employee) => {
+  const handleUpdate = (employee: EmployeeSalarySheetData) => {
     // Set the rowAction to open the update sheet
     setRowAction({
       type: "update",
@@ -118,99 +120,105 @@ export function DataTable<TData, TValue>({
 
 <TableHeader table={table} onHeaderClick={handleHeaderClick} />
 
-  <TableBody>
-    {table.getRowModel().rows?.length ? (
-      table.getRowModel().rows.map((row,index) => (
-        <TableRow
-          key={row.id}
-
-       
-       
-         
+<TableBody>
+  {table.getRowModel().rows?.length ? (
+    table.getRowModel().rows.map((row, index) => (
+      <TableRow
+        key={row.id}
         className={`block border-b border-gray-700 lg:table-row ${
           index % 2 === 0 ? "bg-gray-500" : "bg-gray-600"
         }`}
-          data-state={row.getIsSelected() && "selected"}
-        >
-          {row.getVisibleCells().map((cell) => {
-            
-            const employee = row.original as Employee; // Assert type
+        data-state={row.getIsSelected() && "selected"}
+      >
+        {row.getVisibleCells().map((cell) => {
+          const employee = row.original as EmployeeSalarySheetData; // Assert type
 
-            // Custom rendering for QR code column
-            if (cell.column.id === "qrCode") {
-              return (
-                <TableCell key={cell.id}>
-                  {employee.qrCode ? (
-                    <Image
-                      src={employee.qrCode}
-                      alt={`${employee.userName} QR Code`}
-                      width={50}
-                      height={50}
-                      className="mt-2 mx-auto my-auto cursor-pointer "
-                      onClick={() => {
-                        setSelectedEmployee(employee);
-                        setIsQrDialogOpen(true);
-                      }}
-                    />
-                  ) : (
-                    <span className="text-gray-500">No QR Code</span>
-                  )}
-                </TableCell>
-              );
-            }
-
-            if (cell.column.id === "actions") {
-              return (
-                <TableCell key={cell.id}>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <button>
-                        <Ellipsis className="h-6 w-6 text-white hover:text-gray-900" />
-                      </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      align="end"
-                      className="bg-gray-900 text-white "
-                    >
-                      <DropdownMenuItem
-                        onClick={() => handleUpdate(employee)}
-                        className="cursor-pointer text-lg "
-                      >
-                        <div className="flex items-center m-auto   ">
-                          <div className="">تعديل</div>
-                          <div>icon</div>
-                        </div>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => alert("Delete clicked")}
-                        className="cursor-pointer text-red-500"
-                      >
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              );
-            }
-
-            // Render all other cells as usual
+          // Custom rendering for QR code column
+          if (cell.column.id === "QRCode") {
             return (
-              <TableCell className="text-center" key={cell.id}>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              <TableCell key={cell.id}>
+                {employee.QRCode ? (
+                  <Image
+                    src={employee.QRCode}
+                    alt={`${employee.namefull_emp_name} QR Code`}
+                    width={50}
+                    height={50}
+                    className="mt-2 mx-auto my-auto cursor-pointer "
+                    onClick={() => {
+                      setSelectedEmployee(employee);
+                      setIsQrDialogOpen(true);
+                    }}
+                  />
+                ) : (
+                  <span className="text-gray-500">No QR Code</span>
+                )}
               </TableCell>
             );
-          })}
-          
-        </TableRow>
-      ))
-    ) : (
-      <TableRow>
-        <TableCell colSpan={columns.length} className="h-24 text-center">
-          No results.
-        </TableCell>
+          }
+
+          // Custom rendering for ACTIVE column
+          if (cell.column.id === "ACTIVE") {
+            return (
+              <TableCell key={cell.id}>
+                <span className="flex justify-center">{getActiveStatusDescription(employee.ACTIVE)}</span>
+              </TableCell>
+            );
+          }
+
+          // Custom rendering for actions column
+          if (cell.column.id === "actions") {
+            return (
+              <TableCell key={cell.id}>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button>
+                      <Ellipsis className="h-6 w-6 text-white hover:text-gray-900" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="end"
+                    className="bg-gray-900 text-white "
+                  >
+                    <DropdownMenuItem
+                      onClick={() => handleUpdate(employee)}
+                      className="cursor-pointer text-lg "
+                    >
+                      <div className="flex items-center m-auto">
+                        <div className="">تعديل</div>
+                        <div>icon</div>
+                      </div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => alert("Delete clicked")}
+                      className="cursor-pointer text-red-500"
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            );
+          }
+
+          // Render all other cells as usual
+          return (
+            <TableCell className="text-center" key={cell.id}>
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </TableCell>
+          );
+        })}
       </TableRow>
-    )}
-  </TableBody>
+    ))
+  ) : (
+    <TableRow>
+      <TableCell colSpan={columns.length} className="h-24 text-center">
+        No results.
+      </TableCell>
+    </TableRow>
+  )}
+</TableBody>
+
+ 
 </Table>
 
 
@@ -220,7 +228,7 @@ export function DataTable<TData, TValue>({
         <div className="block lg:hidden">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row, index) => {
-              const employee = row.original as Employee;
+              const employee = row.original as EmployeeSalarySheetData;
               return (
                 <div
                   key={row.id}
@@ -232,49 +240,123 @@ export function DataTable<TData, TValue>({
                   <div className="flex flex-col gap-2">
                     <div className="flex justify-between">
                       <span className="font-semibold text-gray-300">اسم الموظف :</span>
-                      <span className="text-gray-100">{employee.userName}</span>
+                      <span className="text-gray-100">{employee.namefull_emp_name}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="font-semibold text-gray-300">رقم الحاسبة :</span>
-                      <span className="text-gray-100">{employee.empNo}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="font-semibold text-gray-300">تاريخ التعيين :</span>   
-                      <span className="text-gray-100">{format(new Date(employee.employeeHireDate), "yyyy-MM-dd")}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="font-semibold text-gray-300">الهيأة:</span>
-                      <span className="text-gray-100">{employee.comcommittee}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="font-semibold text-gray-300">القسم:</span>
-                      <span className="text-gray-100">{employee.department}</span>
+                      <span className="text-gray-100">{employee.EMP_NO}</span>
                     </div>
 
                     <div className="flex justify-between">
-                      <span className="font-semibold text-gray-300">الشعبة:</span>
-                      <span className="text-gray-100">{employee.unit}</span>
+                      <span className="font-semibold text-gray-300">الرقم المدني:</span>
+                      <span className="text-gray-100">{employee.CIVIL_NO}</span>
                     </div>
+
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-gray-300">السنة:</span>
+                      <span className="text-gray-100">{employee.YEAR_NO}</span>
+                    </div>
+
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-gray-300">الشهر:</span>
+                      <span className="text-gray-100">{employee.MONTH_NO}</span>
+                    </div>
+                    {/* <div className="flex justify-between">
+                      <span className="font-semibold text-gray-300">تاريخ التعيين :</span>   
+                      <span className="text-gray-100">{format(new Date(employee.employeeHireDate), "yyyy-MM-dd")}</span>
+                    </div> */}
+                  <div className="flex justify-between">
+  <span className="font-semibold text-gray-300">حالة الموظف:</span>
+  <span className="text-gray-100">{getActiveStatusDescription(employee.ACTIVE)}</span>
+</div>
+
+                
+
+                    
+                  
+
+                    
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-gray-300">الدرجة:</span>
+                      <span className="text-gray-100">{employee.JobGrade}</span>
+                    </div>
+
+                      
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-gray-300">ايام الغياب:</span>
+                      <span className="text-gray-100">{employee.abs_days}</span>
+                    </div>
+
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-gray-300"> الشهادة:</span>
+                      <span className="text-gray-100">{employee.CERT_NM}</span>
+                    </div>
+
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-gray-300"> الراتب الاسمي:</span>
+                      <span className="text-gray-100">{employee.ORGSAL}</span>
+                    </div>
+
+
+
+
+                    <div className="flex justify-center">
+                      <span className="font-semibold text-gray-100">جدول الاستقطاعات</span>
+                      
+                    </div>
+                    
+                    <div className="overflow-x-auto">
+  <table className="min-w-full table-auto border-collapse border border-gray-600">
+    <thead className="bg-gray-700 text-gray-300">
+      <tr>
+        <th className="border border-gray-600 px-4 py-2 text-left">#</th>
+        {/* <th className="border border-gray-600 px-4 py-2 text-left">DED_NO</th> */}
+        <th className="border border-gray-600 px-4 py-2 text-left">DEDCAL</th>
+        <th className="border border-gray-600 px-4 py-2 text-left">DEDBAL</th>
+        <th className="border border-gray-600 px-4 py-2 text-left">deddifcal</th>
+      </tr>
+    </thead>
+    <tbody>
+      {employee.deductions.map((deduction, index) => (
+        <tr key={deduction.id} className="even:bg-gray-800 odd:bg-gray-900 text-gray-100">
+          <td className="border border-gray-600 px-4 py-2">{index + 1}</td>
+          {/* <td className="border border-gray-600 px-4 py-2">{deduction.DED_NO}</td> */}
+          <td className="border border-gray-600 px-4 py-2">{deduction.DEDCAL}</td>
+          <td className="border border-gray-600 px-4 py-2">{deduction.DEDBAL || "N/A"}</td>
+          <td className="border border-gray-600 px-4 py-2">{deduction.deddifcal}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+      
+
+                   
+<div className="flex justify-between"> 
+                    {employee.QRCode ? (
+                    <Image
+                      src={employee.QRCode}
+                      alt={`${employee.namefull_emp_name} QR Code`}
+                      width={50}
+                      height={50}
+                      className="mt-2 mx-auto my-auto cursor-pointer "
+                      onClick={() => {
+                        setSelectedEmployee(employee);
+                        setIsQrDialogOpen(false);
+                      }}
+                    />
+                  ) : (
+                    <span className="text-gray-500">No QR Code</span>
+                  )}
+
+</div>
 
                   
                   </div>
 
-                  {/* Display QR Code (only one per row) */}
-                  {employee.qrCode && (
-                    <div className="flex justify-center mt-4">
-                      <Image
-                        src={employee.qrCode}
-                        alt={`${employee.userName} QR Code`}
-                        width={50}
-                        height={50}
-                        className="cursor-pointer"
-                        onClick={() => {
-                          setSelectedEmployee(employee);
-                          setIsQrDialogOpen(true);
-                        }}
-                      />
-                    </div>
-                  )}
+                  
+             
                 </div>
               );
             })
@@ -290,8 +372,8 @@ export function DataTable<TData, TValue>({
               if (!isOpen) setSelectedEmployee(null); // Reset selected employee
               setIsQrDialogOpen(isOpen);
             }}
-            qrCodeUrl={selectedEmployee.qrCode ?? ""}
-            userName={selectedEmployee.userName}
+            qrCodeUrl={selectedEmployee.QRCode ?? ""}
+            userName={selectedEmployee.namefull_emp_name}
           />
         )}
 
@@ -328,10 +410,4 @@ export function DataTable<TData, TValue>({
   
   );
 }
-
-
-
-
-
-
 
