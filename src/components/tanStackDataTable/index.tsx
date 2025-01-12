@@ -253,6 +253,13 @@ export function DataTable<TData, TValue>({
                     </div>
 
                     <div className="flex justify-between">
+                      <span className="font-semibold text-gray-300"> الراتب الاسمي:</span>
+                      <span className="text-gray-100">{employee.ORGSAL}</span>
+                    </div>
+
+                 
+
+                    <div className="flex justify-between">
                       <span className="font-semibold text-gray-300">السنة:</span>
                       <span className="text-gray-100">{employee.YEAR_NO}</span>
                     </div>
@@ -261,6 +268,12 @@ export function DataTable<TData, TValue>({
                       <span className="font-semibold text-gray-300">الشهر:</span>
                       <span className="text-gray-100">{employee.MONTH_NO}</span>
                     </div>
+
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-gray-300">المرحلة:</span>
+                      <span className="text-gray-100">{employee.GradeStep}</span>
+                    </div>
+
                     {/* <div className="flex justify-between">
                       <span className="font-semibold text-gray-300">تاريخ التعيين :</span>   
                       <span className="text-gray-100">{format(new Date(employee.employeeHireDate), "yyyy-MM-dd")}</span>
@@ -292,10 +305,7 @@ export function DataTable<TData, TValue>({
                       <span className="text-gray-100">{employee.CERT_NM}</span>
                     </div>
 
-                    <div className="flex justify-between">
-                      <span className="font-semibold text-gray-300"> الراتب الاسمي:</span>
-                      <span className="text-gray-100">{employee.ORGSAL}</span>
-                    </div>
+                 
 
 
 
@@ -327,6 +337,17 @@ export function DataTable<TData, TValue>({
         </tr>
       ))}
     </tbody>
+
+    <tfoot>
+      <tr className="bg-gray-800 text-gray-100 font-bold">
+        <td className="border border-gray-600 px-4 py-2" colSpan={1} >المجموع</td>
+        <td className="border border-gray-600 px-4 py-2" colSpan={2} >
+          {employee.deductions.reduce((sum, deduction) => sum + parseFloat(deduction.DEDCAL || "0"), 0).toFixed(2)}
+        </td>
+        <td className="border border-gray-600 px-4 py-2" colSpan={2} ></td>
+      </tr>
+    </tfoot>
+    
   </table>
 </div>
 
