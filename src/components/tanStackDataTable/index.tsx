@@ -259,6 +259,7 @@ export function DataTable<TData, TValue>({
                    
 
                     <div className="flex justify-between">
+<<<<<<< HEAD
                       <span className="font-extrabold text-xl text-gray-300">السنة:</span>
                       <span className="text-gray-100 font-extrabold text-xl">{employee.YEAR_NO}</span>
                     </div>
@@ -269,6 +270,28 @@ export function DataTable<TData, TValue>({
     {getArabicMonthName(employee.MONTH_NO)}
   </span>
 </div>
+=======
+                      <span className="font-semibold text-gray-300"> الراتب الاسمي:</span>
+                      <span className="text-gray-100">{employee.ORGSAL}</span>
+                    </div>
+
+                 
+
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-gray-300">السنة:</span>
+                      <span className="text-gray-100">{employee.YEAR_NO}</span>
+                    </div>
+
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-gray-300">الشهر:</span>
+                      <span className="text-gray-100">{employee.MONTH_NO}</span>
+                    </div>
+
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-gray-300">المرحلة:</span>
+                      <span className="text-gray-100">{employee.GradeStep}</span>
+                    </div>
+>>>>>>> 845b8b2ac5c57a44023cb08aa40ec9fcbc424440
 
                     {/* <div className="flex justify-between">
                       <span className="font-semibold text-gray-300">تاريخ التعيين :</span>   
@@ -302,10 +325,14 @@ export function DataTable<TData, TValue>({
                       <span className="text-gray-100 font-extrabold text-xl">{employee.CERT_NM}</span>
                     </div>
 
+<<<<<<< HEAD
                     <div className="flex justify-between">
                       <span className="font-extrabold text-xl text-gray-300"> الراتب الكلي:</span>
                       <span className="text-gray-100 font-extrabold text-xl">{employee.GRSDED}</span>
                     </div>
+=======
+                 
+>>>>>>> 845b8b2ac5c57a44023cb08aa40ec9fcbc424440
 
                     {/* <div className="flex justify-between">
                       <span className="font-extrabold text-xl text-gray-300">الرقم المدني:</span>
@@ -342,6 +369,17 @@ export function DataTable<TData, TValue>({
         </tr>
       ))}
     </tbody>
+
+    <tfoot>
+      <tr className="bg-gray-800 text-gray-100 font-bold">
+        <td className="border border-gray-600 px-4 py-2" colSpan={1} >المجموع</td>
+        <td className="border border-gray-600 px-4 py-2" colSpan={2} >
+          {employee.deductions.reduce((sum, deduction) => sum + parseFloat(deduction.DEDCAL || "0"), 0).toFixed(2)}
+        </td>
+        <td className="border border-gray-600 px-4 py-2" colSpan={2} ></td>
+      </tr>
+    </tfoot>
+    
   </table>
 </div>
 
