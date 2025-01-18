@@ -180,7 +180,7 @@ const GenerateQRCodeComponent = () => {
     </CardContent>
       <CardFooter className="flex ">
        
-        <Button  className="font-extrabold text-lg m-auto" type="submit">حفظ</Button>
+        <Button  className="font-extrabold text-lg m-auto" type="submit">توليد رمز الاستجابة</Button>
 
       </CardFooter>
     </Card>

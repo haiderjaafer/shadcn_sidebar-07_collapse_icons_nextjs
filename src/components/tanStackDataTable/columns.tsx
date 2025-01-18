@@ -107,7 +107,7 @@ export const columns: ColumnDef<EmployeeSalarySheetData>[] = [
       </Button>
     ),
 
-    cell: ({ row }) => <div>{row.getValue("EMP_NO")}</div>,
+    cell: ({ row }) => <div>{parseInt(row.getValue("EMP_NO"),10)}</div>,
     enableSorting: false,
   },
 
@@ -156,26 +156,7 @@ export const columns: ColumnDef<EmployeeSalarySheetData>[] = [
   },
 
   
-  {
-    accessorKey: "CIVIL_NO",
-    // header: ({ column }) => (
-    //   <SortableHeader column={column} title="رقم الموظف" className="font-extrabold text-center " />
-    // ),
-
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => handleHeaderClick(column.id)}
-        className="text-left hover:bg-black"
-      >
-        <SortableHeader column={column} title="الرقم المدني" className="font-extrabold text-center text-lg text-white "  />
-      </Button>
-    ),
-
-    cell: ({ row }) => <div>{row.getValue("CIVIL_NO")}</div>,
-    enableSorting: false,
-  },
-
+ 
 
   
   {
@@ -198,8 +179,28 @@ export const columns: ColumnDef<EmployeeSalarySheetData>[] = [
     enableSorting: false,
   },
 
+  // {
+  //   accessorKey: "cal_centre_code",
+  //   // header: ({ column }) => (
+  //   //   <SortableHeader column={column} title="رقم الموظف" className="font-extrabold text-center " />
+  //   // ),
+
+  //   header: ({ column }) => (
+  //     <Button
+  //       variant="ghost"
+  //       onClick={() => handleHeaderClick(column.id)}
+  //       className="text-left hover:bg-black"
+  //     >
+  //       <SortableHeader column={column} title="مركز الكلفة" className="font-extrabold text-center text-lg text-white "  />
+  //     </Button>
+  //   ),
+
+  //   cell: ({ row }) => <div>{row.getValue("cal_centre_code")}</div>,
+  //   enableSorting: false,
+  // },
+
   {
-    accessorKey: "cal_centre_code",
+    accessorKey: "sgrade",
     // header: ({ column }) => (
     //   <SortableHeader column={column} title="رقم الموظف" className="font-extrabold text-center " />
     // ),
@@ -210,13 +211,137 @@ export const columns: ColumnDef<EmployeeSalarySheetData>[] = [
         onClick={() => handleHeaderClick(column.id)}
         className="text-left hover:bg-black"
       >
-        <SortableHeader column={column} title="مركز الكلفة" className="font-extrabold text-center text-lg text-white "  />
+        <SortableHeader column={column} title="الدرجة" className="font-extrabold text-center text-lg text-white "  />
       </Button>
     ),
 
-    cell: ({ row }) => <div>{row.getValue("cal_centre_code")}</div>,
+    cell: ({ row }) => <div>{row.getValue("sgrade")}</div>,
     enableSorting: false,
   },
+
+  
+  {
+    accessorKey: "CERT_NM",
+    // header: ({ column }) => (
+    //   <SortableHeader column={column} title="رقم الموظف" className="font-extrabold text-center " />
+    // ),
+
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => handleHeaderClick(column.id)}
+        className="text-left hover:bg-black"
+      >
+        <SortableHeader column={column} title="الشهادة" className="font-extrabold text-center text-lg text-white "  />
+      </Button>
+    ),
+
+    cell: ({ row }) => <div>{row.getValue("CERT_NM")}</div>,
+    enableSorting: false,
+  },
+
+
+  {
+    accessorKey: "JOB_NM",
+    // header: ({ column }) => (
+    //   <SortableHeader column={column} title="رقم الموظف" className="font-extrabold text-center " />
+    // ),
+
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => handleHeaderClick(column.id)}
+        className="text-left hover:bg-black"
+      >
+        <SortableHeader column={column} title="العنوان الوظيفي" className="font-extrabold text-center text-lg text-white "  />
+      </Button>
+    ),
+
+    cell: ({ row }) => <div>{row.getValue("JOB_NM")}</div>,
+    enableSorting: false,
+  },
+
+
+  {
+    accessorKey: "ORGSAL",
+    // header: ({ column }) => (
+    //   <SortableHeader column={column} title="رقم الموظف" className="font-extrabold text-center " />
+    // ),
+
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => handleHeaderClick(column.id)}
+        className="text-left hover:bg-black"
+      >
+        <SortableHeader column={column} title="الراتب الاسمي" className="font-extrabold text-center text-lg text-white "  />
+      </Button>
+    ),
+
+    cell: ({ row }) => <div>{row.getValue("ORGSAL")}</div>,
+    enableSorting: false,
+  },
+
+  {
+    accessorKey: "GRSDED",
+    // header: ({ column }) => (
+    //   <SortableHeader column={column} title="رقم الموظف" className="font-extrabold text-center " />
+    // ),
+
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => handleHeaderClick(column.id)}
+        className="text-left hover:bg-black"
+      >
+        <SortableHeader column={column} title="الراتب الكلي" className="font-extrabold text-center text-lg text-white "  />
+      </Button>
+    ),
+
+    cell: ({ row }) => <div>{row.getValue("GRSDED")}</div>,
+    enableSorting: false,
+  },
+
+  {
+    accessorKey: "QRCode",
+    header: ({ column }) => (
+      <SortableHeader column={column} title="رمز الاستجابة"  className="font-extrabold text-center text-lg hover:bg-black text-white "/>
+       
+    ),
+    cell: ({ row }) => (
+      <img
+        src={row.getValue("QRCode")}
+        alt="QR Code"
+        className="w-16 h-16 object-cover"
+      />
+    ),
+    enableSorting:false
+  },
+
+  {
+    accessorKey: "GradeStep",
+    // header: ({ column }) => (
+    //   <SortableHeader column={column} title="رقم الموظف" className="font-extrabold text-center " />
+    // ),
+
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => handleHeaderClick(column.id)}
+        className="text-left hover:bg-black"
+      >
+        <SortableHeader column={column} title="المرحلة" className="font-extrabold text-center text-lg text-white "  />
+      </Button>
+    ),
+
+    cell: ({ row }) => <div>{row.getValue("GradeStep")}</div>,
+    enableSorting: false,
+  },
+
+
+  
+
+
 
   {
     accessorKey: "INCRDIF",
@@ -280,68 +405,14 @@ export const columns: ColumnDef<EmployeeSalarySheetData>[] = [
   },
 
 
-  {
-    accessorKey: "sgrade",
-    // header: ({ column }) => (
-    //   <SortableHeader column={column} title="رقم الموظف" className="font-extrabold text-center " />
-    // ),
-
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => handleHeaderClick(column.id)}
-        className="text-left hover:bg-black"
-      >
-        <SortableHeader column={column} title="sgrade" className="font-extrabold text-center text-lg text-white "  />
-      </Button>
-    ),
-
-    cell: ({ row }) => <div>{row.getValue("sgrade")}</div>,
-    enableSorting: false,
-  },
 
 
 
-  {
-    accessorKey: "GradeStep",
-    // header: ({ column }) => (
-    //   <SortableHeader column={column} title="رقم الموظف" className="font-extrabold text-center " />
-    // ),
-
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => handleHeaderClick(column.id)}
-        className="text-left hover:bg-black"
-      >
-        <SortableHeader column={column} title="GradeStep" className="font-extrabold text-center text-lg text-white "  />
-      </Button>
-    ),
-
-    cell: ({ row }) => <div>{row.getValue("GradeStep")}</div>,
-    enableSorting: false,
-  },
 
 
-  {
-    accessorKey: "GRSDED",
-    // header: ({ column }) => (
-    //   <SortableHeader column={column} title="رقم الموظف" className="font-extrabold text-center " />
-    // ),
 
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => handleHeaderClick(column.id)}
-        className="text-left hover:bg-black"
-      >
-        <SortableHeader column={column} title="GRSDED" className="font-extrabold text-center text-lg text-white "  />
-      </Button>
-    ),
 
-    cell: ({ row }) => <div>{row.getValue("GRSDED")}</div>,
-    enableSorting: false,
-  },
+
 
 
   {
@@ -427,6 +498,28 @@ export const columns: ColumnDef<EmployeeSalarySheetData>[] = [
     enableSorting: false,
   },
 
+
+  {
+    accessorKey: "CIVIL_NO",
+    // header: ({ column }) => (
+    //   <SortableHeader column={column} title="رقم الموظف" className="font-extrabold text-center " />
+    // ),
+
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => handleHeaderClick(column.id)}
+        className="text-left hover:bg-black"
+      >
+        <SortableHeader column={column} title="الرقم المدني" className="font-extrabold text-center text-lg text-white "  />
+      </Button>
+    ),
+
+    cell: ({ row }) => <div>{row.getValue("CIVIL_NO")}</div>,
+    enableSorting: false,
+  },
+
+
   {
     accessorKey: "JobGrade",
     // header: ({ column }) => (
@@ -448,67 +541,6 @@ export const columns: ColumnDef<EmployeeSalarySheetData>[] = [
   },
 
 
-  {
-    accessorKey: "CERT_NM",
-    // header: ({ column }) => (
-    //   <SortableHeader column={column} title="رقم الموظف" className="font-extrabold text-center " />
-    // ),
-
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => handleHeaderClick(column.id)}
-        className="text-left hover:bg-black"
-      >
-        <SortableHeader column={column} title="الشهادة" className="font-extrabold text-center text-lg text-white "  />
-      </Button>
-    ),
-
-    cell: ({ row }) => <div>{row.getValue("CERT_NM")}</div>,
-    enableSorting: false,
-  },
-
-
-  {
-    accessorKey: "JOB_NM",
-    // header: ({ column }) => (
-    //   <SortableHeader column={column} title="رقم الموظف" className="font-extrabold text-center " />
-    // ),
-
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => handleHeaderClick(column.id)}
-        className="text-left hover:bg-black"
-      >
-        <SortableHeader column={column} title="العنوان الوظيفي" className="font-extrabold text-center text-lg text-white "  />
-      </Button>
-    ),
-
-    cell: ({ row }) => <div>{row.getValue("JOB_NM")}</div>,
-    enableSorting: false,
-  },
-
-
-  {
-    accessorKey: "ORGSAL",
-    // header: ({ column }) => (
-    //   <SortableHeader column={column} title="رقم الموظف" className="font-extrabold text-center " />
-    // ),
-
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => handleHeaderClick(column.id)}
-        className="text-left hover:bg-black"
-      >
-        <SortableHeader column={column} title="الراتب الاسمي" className="font-extrabold text-center text-lg text-white "  />
-      </Button>
-    ),
-
-    cell: ({ row }) => <div>{row.getValue("ORGSAL")}</div>,
-    enableSorting: false,
-  },
 
   {
     accessorKey: "POST_NM",

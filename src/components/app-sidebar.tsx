@@ -59,29 +59,29 @@ const data = {
   ],
   navMain: [
     {
-      title: "اضافة الكتب",
+      title: "اضافة الموظفيين",
       url: "/",
       icon: SquareTerminal,
       isActive: true,
       items: [
 
-        {
-          title: "الصفحة الرئيسية",
-          url: "/",
-        },
+        // {
+        //   title: "الصفحة الرئيسية",
+        //   url: "/",
+        // },
 
         {
           title: "توليد رمز استجابة للموظفيين",
           url: "/generateQRCodesPage",
         },
-        {
-          title: "QR code رمز الاستجابة السريع",
-          url: "/employeesQRCode",
-        },
-        {
-          title: "تقارير",
-          url: "api/reports",
-        },
+        // {
+        //   title: "QR code رمز الاستجابة السريع",
+        //   url: "/employeesQRCode",
+        // },
+        // {
+        //   title: "تقارير",
+        //   url: "api/reports",
+        // },
       ],
     },
     {
@@ -89,18 +89,18 @@ const data = {
       url: "#",
       icon: Bot,
       items: [
+        // {
+        //   // title: "Search by Emo No",
+        //   url: "/employees",
+        // },
         {
-          title: "Search by Emo No",
-          url: "/employees",
-        },
-        {
-          title: "tanstack Table",
+          title: " رمز استجابة الموظفيين",
           url: "/tanstack_table",
         },
-        {
-          title: "Quantum",
-          url: "#",
-        },
+        // {
+        //   title: "Quantum",
+        //   url: "#",
+        // },
       ],
     },
     {

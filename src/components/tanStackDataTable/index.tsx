@@ -27,6 +27,8 @@ import Search from "../EmployeeTable/SearchQueryParams";
 import { format } from "date-fns";
 import { EmployeeSalarySheetData } from "@/apiCallFunctions/EmployeeByEmpNo";
 import { getActiveStatusDescription } from "./getActiveStatusDescription";
+import { getArabicMonthName } from "./mappingArabicMonthName";
+import { getJobGradeInArabic } from "./mappingJobGradeInArabic";
 
 
 export interface DataTableProps<TData, TValue> {
@@ -111,11 +113,13 @@ export function DataTable<TData, TValue>({
 
   
 <div className="flex flex-col my-10" dir="rtl">
-      <div className="rounded-md border relative">
+
+<div className="my-5 m-auto"><label className="font-extrabold text-2xl">صفحة معلومات الموظفيين ورموز الاستجابة</label></div>
+      <div className="rounded-md border relative mb-80">
         {/* Table for larger screens */}
         <div className="hidden lg:block">
 
-
+ 
         <Table >
 
 <TableHeader table={table} onHeaderClick={handleHeaderClick} />
@@ -239,35 +243,40 @@ export function DataTable<TData, TValue>({
                   {/* Display only relevant fields */}
                   <div className="flex flex-col gap-2">
                     <div className="flex justify-between">
-                      <span className="font-semibold text-gray-300">اسم الموظف :</span>
-                      <span className="text-gray-100">{employee.namefull_emp_name}</span>
+                      <span className="font-extrabold text-xl  text-gray-300">اسم الموظف :</span>
+                      <span className="text-gray-100 font-extrabold text-xl">{employee.namefull_emp_name}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="font-semibold text-gray-300">رقم الحاسبة :</span>
-                      <span className="text-gray-100">{employee.EMP_NO}</span>
+                      <span className="font-extrabold text-xl text-gray-300">رقم الحاسبة :</span>
+                      <span className="text-gray-100 font-extrabold text-xl">{parseInt(employee.EMP_NO, 10)}</span>
                     </div>
 
                     <div className="flex justify-between">
-                      <span className="font-semibold text-gray-300">الرقم المدني:</span>
-                      <span className="text-gray-100">{employee.CIVIL_NO}</span>
+                      <span className="font-extrabold text-xl text-gray-300"> الراتب الاسمي:</span>
+                      <span className="text-gray-100 font-extrabold text-xl">{employee.ORGSAL}</span>
+                    </div>
+
+                   
+
+                    <div className="flex justify-between">
+                      <span className="font-extrabold text-xl text-gray-300">السنة:</span>
+                      <span className="text-gray-100 font-extrabold text-xl">{employee.YEAR_NO}</span>
                     </div>
 
                     <div className="flex justify-between">
-                      <span className="font-semibold text-gray-300">السنة:</span>
-                      <span className="text-gray-100">{employee.YEAR_NO}</span>
-                    </div>
+  <span className="font-extrabold text-xl text-gray-300">الشهر:</span>
+  <span className="text-gray-100 font-extrabold text-xl">
+    {getArabicMonthName(employee.MONTH_NO)}
+  </span>
+</div>
 
-                    <div className="flex justify-between">
-                      <span className="font-semibold text-gray-300">الشهر:</span>
-                      <span className="text-gray-100">{employee.MONTH_NO}</span>
-                    </div>
                     {/* <div className="flex justify-between">
                       <span className="font-semibold text-gray-300">تاريخ التعيين :</span>   
                       <span className="text-gray-100">{format(new Date(employee.employeeHireDate), "yyyy-MM-dd")}</span>
                     </div> */}
                   <div className="flex justify-between">
-  <span className="font-semibold text-gray-300">حالة الموظف:</span>
-  <span className="text-gray-100">{getActiveStatusDescription(employee.ACTIVE)}</span>
+  <span className="font-extrabold text-xl text-gray-300">حالة الموظف:</span>
+  <span className="text-gray-100 font-extrabold text-xl">{getActiveStatusDescription(employee.ACTIVE)}</span>
 </div>
 
                 
@@ -277,25 +286,31 @@ export function DataTable<TData, TValue>({
 
                     
                     <div className="flex justify-between">
-                      <span className="font-semibold text-gray-300">الدرجة:</span>
-                      <span className="text-gray-100">{employee.JobGrade}</span>
+                      <span className="font-extrabold text-xl text-gray-300">الدرجة:</span>
+                      <span className="text-gray-100 font-extrabold text-xl">    {getJobGradeInArabic(employee.JobGrade)}
+                      </span>
                     </div>
 
                       
                     <div className="flex justify-between">
-                      <span className="font-semibold text-gray-300">ايام الغياب:</span>
-                      <span className="text-gray-100">{employee.abs_days}</span>
+                      <span className="font-extrabold text-xl text-gray-300">ايام الغياب:</span>
+                      <span className="text-gray-100 font-extrabold text-xl">{employee.abs_days}</span>
                     </div>
 
                     <div className="flex justify-between">
-                      <span className="font-semibold text-gray-300"> الشهادة:</span>
-                      <span className="text-gray-100">{employee.CERT_NM}</span>
+                      <span className="font-extrabold text-xl text-gray-300"> الشهادة:</span>
+                      <span className="text-gray-100 font-extrabold text-xl">{employee.CERT_NM}</span>
                     </div>
 
                     <div className="flex justify-between">
-                      <span className="font-semibold text-gray-300"> الراتب الاسمي:</span>
-                      <span className="text-gray-100">{employee.ORGSAL}</span>
+                      <span className="font-extrabold text-xl text-gray-300"> الراتب الكلي:</span>
+                      <span className="text-gray-100 font-extrabold text-xl">{employee.GRSDED}</span>
                     </div>
+
+                    {/* <div className="flex justify-between">
+                      <span className="font-extrabold text-xl text-gray-300">الرقم المدني:</span>
+                      <span className="text-gray-100 font-extrabold text-xl">{employee.CIVIL_NO}</span>
+                    </div> */}
 
 
 
@@ -311,9 +326,9 @@ export function DataTable<TData, TValue>({
       <tr>
         <th className="border border-gray-600 px-4 py-2 text-left">#</th>
         {/* <th className="border border-gray-600 px-4 py-2 text-left">DED_NO</th> */}
-        <th className="border border-gray-600 px-4 py-2 text-left">DEDCAL</th>
-        <th className="border border-gray-600 px-4 py-2 text-left">DEDBAL</th>
-        <th className="border border-gray-600 px-4 py-2 text-left">deddifcal</th>
+        <th className="border border-gray-600 px-4 py-2 text-left"> الاستقطاع</th>
+        <th className="border border-gray-600 px-4 py-2 text-left">الرصيد</th>
+        <th className="border border-gray-600 px-4 py-2 text-left">الفرق</th>
       </tr>
     </thead>
     <tbody>
@@ -333,14 +348,14 @@ export function DataTable<TData, TValue>({
       
 
                    
-<div className="flex justify-between"> 
+<div className="flex justify-between "> 
                     {employee.QRCode ? (
                     <Image
                       src={employee.QRCode}
                       alt={`${employee.namefull_emp_name} QR Code`}
-                      width={50}
-                      height={50}
-                      className="mt-2 mx-auto my-auto cursor-pointer "
+                      width={80}
+                      height={80}
+                      className=" mx-auto my-auto cursor-pointer "
                       onClick={() => {
                         setSelectedEmployee(employee);
                         setIsQrDialogOpen(false);
