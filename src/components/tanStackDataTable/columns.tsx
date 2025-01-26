@@ -662,64 +662,50 @@ export const columns: ColumnDef<EmployeeSalarySheetData>[] = [
 
 
 
+
+
+
+
+
+
+
   {
-    accessorKey: "QRCode",
+    id: "actions",
     header: ({ column }) => (
-      <SortableHeader column={column} title="رمز الاستجابة"  className="font-extrabold text-center text-lg hover:bg-black text-white "/>
-       
-    ),
-    cell: ({ row }) => (
-      <img
-        src={row.getValue("QRCode")}
-        alt="QR Code"
-        className="w-16 h-16 object-cover"
-      />
-    ),
-    enableSorting:false
-  },
-
-
-
-
-
-
-  // {
-  //   id: "actions",
-  //   header: ({ column }) => (
-  //     <SortableHeader column={column} title="الاعمال"  className="font-extrabold text-center text-lg hover:bg-black text-white "/>
+      <SortableHeader column={column} title="الاعمال"  className="font-extrabold text-center text-lg hover:bg-black text-white "/>
      
-  //   ),
-  //   enableSorting:false,
-  //   cell: ({ row }) => {
-  //     const employee = row.original as EmployeeSalarySheetData; // Ensure type safety
-  //     return (
-  //       <div className="text-center">
-  //         <DropdownMenu>
-  //           <DropdownMenuTrigger asChild>
-  //             <button>
-  //               <Ellipsis className="h-6 w-6 text-gray-500 hover:text-gray-900" />
-  //             </button>
-  //           </DropdownMenuTrigger>
-  //           <DropdownMenuContent align="end" className="bg-gray-900 text-white">
-  //             <DropdownMenuItem
-  //                onClick={() => handleUpdate(employee)}
+    ),
+    enableSorting:false,
+    cell: ({ row }) => {
+      const employee = row.original as EmployeeSalarySheetData; // Ensure type safety
+      return (
+        <div className="text-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button>
+                <Ellipsis className="h-6 w-6 text-gray-500 hover:text-gray-900" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-gray-900 text-white">
+              <DropdownMenuItem
+                 onClick={() => handleUpdate(employee)}
                   
-  //               className="cursor-pointer"
-  //             >
-  //               Edit
-  //             </DropdownMenuItem>
-  //             <DropdownMenuItem
-  //               onClick={() => handleDelete(employee)}
-  //               className="cursor-pointer text-red-500"
-  //             >
-  //               Delete
-  //             </DropdownMenuItem>
-  //           </DropdownMenuContent>
-  //         </DropdownMenu>
-  //       </div>
-  //     );
-  //   },
-  // },
+                className="cursor-pointer"
+              >
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => handleDelete(employee)}
+                className="cursor-pointer text-red-500"
+              >
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      );
+    },
+  },
 ];
 
 const handleDelete = (employee: EmployeeSalarySheetData) => {

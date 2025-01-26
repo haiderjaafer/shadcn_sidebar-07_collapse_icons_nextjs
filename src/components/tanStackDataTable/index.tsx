@@ -109,127 +109,123 @@ export function DataTable<TData, TValue>({
 
 
   return (
-
-
+    <div className="flex flex-col my-1" dir="rtl">
+      <div className="my-0 m-auto">
+        <label className="font-extrabold text-2xl">
+          صفحة معلومات الموظفيين ورموز الاستجابة
+        </label>
+      </div>
   
-<div className="flex flex-col my-10" dir="rtl">
-
-<div className="my-5 m-auto"><label className="font-extrabold text-2xl">صفحة معلومات الموظفيين ورموز الاستجابة</label></div>
-      <div className="rounded-md border relative mb-80">
+      <div className="rounded-md border relative mb-0">
         {/* Table for larger screens */}
         <div className="hidden lg:block">
-
- 
-        <Table >
-
-<TableHeader table={table} onHeaderClick={handleHeaderClick} />
-
-<TableBody>
-  {table.getRowModel().rows?.length ? (
-    table.getRowModel().rows.map((row, index) => (
-      <TableRow
-        key={row.id}
-        className={`block border-b border-gray-700 lg:table-row ${
-          index % 2 === 0 ? "bg-gray-500" : "bg-gray-600"
-        }`}
-        data-state={row.getIsSelected() && "selected"}
-      >
-        {row.getVisibleCells().map((cell) => {
-          const employee = row.original as EmployeeSalarySheetData; // Assert type
-
-          // Custom rendering for QR code column
-          if (cell.column.id === "QRCode") {
-            return (
-              <TableCell key={cell.id}>
-                {employee.QRCode ? (
-                  <Image
-                    src={employee.QRCode}
-                    alt={`${employee.namefull_emp_name} QR Code`}
-                    width={50}
-                    height={50}
-                    className="mt-2 mx-auto my-auto cursor-pointer "
-                    onClick={() => {
-                      setSelectedEmployee(employee);
-                      setIsQrDialogOpen(true);
-                    }}
-                  />
-                ) : (
-                  <span className="text-gray-500">No QR Code</span>
-                )}
-              </TableCell>
-            );
-          }
-
-          // Custom rendering for ACTIVE column
-          if (cell.column.id === "ACTIVE") {
-            return (
-              <TableCell key={cell.id}>
-                <span className="flex justify-center">{getActiveStatusDescription(employee.ACTIVE)}</span>
-              </TableCell>
-            );
-          }
-
-          // Custom rendering for actions column
-          if (cell.column.id === "actions") {
-            return (
-              <TableCell key={cell.id}>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button>
-                      <Ellipsis className="h-6 w-6 text-white hover:text-gray-900" />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    align="end"
-                    className="bg-gray-900 text-white "
+          <Table>
+            <TableHeader table={table} onHeaderClick={handleHeaderClick} />
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row, index) => (
+                  <TableRow
+                    key={`${row.id}_${index}`}
+                    className={`block border-b border-gray-700 lg:table-row ${
+                      index % 2 === 0 ? "bg-gray-500" : "bg-gray-600"
+                    }`}
+                    data-state={row.getIsSelected() && "selected"}
                   >
-                    <DropdownMenuItem
-                      onClick={() => handleUpdate(employee)}
-                      className="cursor-pointer text-lg "
-                    >
-                      <div className="flex items-center m-auto">
-                        <div className="">تعديل</div>
-                        <div>icon</div>
-                      </div>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => alert("Delete clicked")}
-                      className="cursor-pointer text-red-500"
-                    >
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
-            );
-          }
-
-          // Render all other cells as usual
-          return (
-            <TableCell className="text-center" key={cell.id}>
-              {flexRender(cell.column.columnDef.cell, cell.getContext())}
-            </TableCell>
-          );
-        })}
-      </TableRow>
-    ))
-  ) : (
-    <TableRow>
-      <TableCell colSpan={columns.length} className="h-24 text-center">
-        No results.
-      </TableCell>
-    </TableRow>
-  )}
-</TableBody>
-
- 
-</Table>
-
-
+                    {row.getVisibleCells().map((cell) => {
+                      const employee = row.original as EmployeeSalarySheetData;
+  
+                      // Custom rendering for QR code column
+                      if (cell.column.id === "QRCode") {
+                        return (
+                          <TableCell key={cell.id}>
+                            {employee.QRCode ? (
+                              <Image
+                                src={employee.QRCode}
+                                alt={`${employee.namefull_emp_name} QR Code`}
+                                width={50}
+                                height={50}
+                                className="mt-2 mx-auto my-auto cursor-pointer"
+                                onClick={() => {
+                                  setSelectedEmployee(employee);
+                                  setIsQrDialogOpen(true);
+                                }}
+                              />
+                            ) : (
+                              <span className="text-gray-500">No QR Code</span>
+                            )}
+                          </TableCell>
+                        );
+                      }
+  
+                      // Custom rendering for ACTIVE column
+                      if (cell.column.id === "ACTIVE") {
+                        return (
+                          <TableCell key={cell.id}>
+                            <span className="flex justify-center">
+                              {getActiveStatusDescription(employee.ACTIVE)}
+                            </span>
+                          </TableCell>
+                        );
+                      }
+  
+                      // Custom rendering for actions column
+                      if (cell.column.id === "actions") {
+                        return (
+                          <TableCell key={cell.id}>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <button>
+                                  <Ellipsis className="h-6 w-6 text-white hover:text-gray-900" />
+                                </button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent
+                                align="end"
+                                className="bg-gray-900 text-white "
+                              >
+                                <DropdownMenuItem
+                                  onClick={() => handleUpdate(employee)}
+                                  className="cursor-pointer text-lg"
+                                >
+                                  <div className="flex items-center m-auto">
+                                    <div className="">تعديل</div>
+                                    <div>icon</div>
+                                  </div>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => alert("Delete clicked")}
+                                  className="cursor-pointer text-red-500"
+                                >
+                                  Delete
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        );
+                      }
+  
+                      // Render all other cells as usual
+                      return (
+                        <TableCell className="text-center" key={cell.id}>
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={columns.length} className="h-24 text-center">
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
         </div>
-
-        {/* Vertical layout for smaller screens */}
-        <div className="block lg:hidden">
+      </div>
+  
+      {/* Vertical layout for smaller screens */}
+      <div className="block lg:hidden">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row, index) => {
               const employee = row.original as EmployeeSalarySheetData;
@@ -259,7 +255,7 @@ export function DataTable<TData, TValue>({
                    
 
                     <div className="flex justify-between">
-<<<<<<< HEAD
+
                       <span className="font-extrabold text-xl text-gray-300">السنة:</span>
                       <span className="text-gray-100 font-extrabold text-xl">{employee.YEAR_NO}</span>
                     </div>
@@ -270,10 +266,18 @@ export function DataTable<TData, TValue>({
     {getArabicMonthName(employee.MONTH_NO)}
   </span>
 </div>
-=======
-                      <span className="font-semibold text-gray-300"> الراتب الاسمي:</span>
-                      <span className="text-gray-100">{employee.ORGSAL}</span>
+                   
+                   </div>
+
+
+                       
+                   <div className="flex justify-between">
+                   <span className="font-semibold text-gray-300"> الراتب الاسمي:</span>
+                   <span className="text-gray-100">{employee.ORGSAL}</span>
                     </div>
+
+                       
+                      
 
                  
 
@@ -291,7 +295,7 @@ export function DataTable<TData, TValue>({
                       <span className="font-semibold text-gray-300">المرحلة:</span>
                       <span className="text-gray-100">{employee.GradeStep}</span>
                     </div>
->>>>>>> 845b8b2ac5c57a44023cb08aa40ec9fcbc424440
+
 
                     {/* <div className="flex justify-between">
                       <span className="font-semibold text-gray-300">تاريخ التعيين :</span>   
@@ -325,14 +329,14 @@ export function DataTable<TData, TValue>({
                       <span className="text-gray-100 font-extrabold text-xl">{employee.CERT_NM}</span>
                     </div>
 
-<<<<<<< HEAD
+
                     <div className="flex justify-between">
                       <span className="font-extrabold text-xl text-gray-300"> الراتب الكلي:</span>
                       <span className="text-gray-100 font-extrabold text-xl">{employee.GRSDED}</span>
                     </div>
-=======
+
                  
->>>>>>> 845b8b2ac5c57a44023cb08aa40ec9fcbc424440
+
 
                     {/* <div className="flex justify-between">
                       <span className="font-extrabold text-xl text-gray-300">الرقم المدني:</span>
@@ -410,57 +414,63 @@ export function DataTable<TData, TValue>({
 
                   
              
-                </div>
+                
               );
             })
           ) : (
             <div className="h-24 text-center">No results.</div>
           )}
         </div>
-      </div>
-      {selectedEmployee && (
-          <ShowQrCodeDialog
-            open={isQrDialogOpen}
-            onOpenChange={(isOpen: boolean) => {
-              if (!isOpen) setSelectedEmployee(null); // Reset selected employee
-              setIsQrDialogOpen(isOpen);
-            }}
-            qrCodeUrl={selectedEmployee.QRCode ?? ""}
-            userName={selectedEmployee.namefull_emp_name}
-          />
-        )}
+     
 
-        <div>
-             {/* UpdateEmployeeSheet Component */}
-      {rowAction && rowAction.type === "update" && (
-        <UpdateEmployeeSheet
-          open={rowAction.type === "update"} // Open if type is update
-          onOpenChange={handleUpdateClose} // Close the sheet on dismiss
-          employee={rowAction.row} // Pass the selected employee data
+  
+      {/* Dialog for QR Code */}
+      {selectedEmployee && (
+        <ShowQrCodeDialog
+          open={isQrDialogOpen}
+          onOpenChange={(isOpen: boolean) => {
+            if (!isOpen) setSelectedEmployee(null); // Reset selected employee
+            setIsQrDialogOpen(isOpen);
+          }}
+          qrCodeUrl={selectedEmployee?.QRCode ?? ""}
+          userName={selectedEmployee?.namefull_emp_name ?? ""}
         />
       )}
-        </div>
-
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+    
+    
+      {/* UpdateEmployeeSheet Component */}
+      {rowAction && rowAction.type === "update" && (
+        <UpdateEmployeeSheet
+          open={rowAction.type === "update"}
+          onOpenChange={handleUpdateClose}
+          employee={rowAction.row}
+        />
+      )}
+  
+      {/* Dialog for Search */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Search {activeColumn}</DialogTitle>
           </DialogHeader>
           <div>
-            <Search/>
-            {/* Placeholder: Add search functionality here */}
+            <Search />
             Search or filter data for the column: {activeColumn}
           </div>
         </DialogContent>
       </Dialog>
-      </div>
-   
     
+      </div>
 
+  
   
 
 
-  
-  );
+
+
+        )       
 }
+
+
+
 
